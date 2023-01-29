@@ -1,13 +1,8 @@
 #include "cub3d.h"
 
-int parsing(t_cub3d *cub, char *str)
+int ft_check_rgb(char *rgb)
 {
-    int i;
-
-    i = 0;
-    while (check_ws(*str))
-        str++;
-    if (!ft_strncmp(str, "NO", 2) || !ft_strncmp(str, "SO", 2) || !ft_strncmp(str, "WE", 2) || !ft_strncmp(str, "EA", 2))
+    
 }
 
 int check_ws(char c)
@@ -16,6 +11,72 @@ int check_ws(char c)
         return (1);
     return (0);
 }
+
+int ft_floor_ceilling(t_cub3d *cub, char *str)
+{
+    int i;
+    int j;
+
+    if ((ft_strncmp(str, "F", 1) == 0 && cub->floor_rgb)
+        || (ft_strncmp(str, "C", 1) == 0 && cub->ceilling_rgb))
+        return (0);
+    i = 1;
+    while (check_ws(*str + i))
+        i++;
+    j = i;
+    while (ft_isprint(*str + j))
+        j++;
+    if (ft_strncmp(str, "F", 1) == 0)
+        cub->floor_rgb = ft_substr(str, i, j);
+    if (ft_strncmp(str, "C", 1) == 0)
+        cub->ceilling_rgb = ft_substr(str, i, j);
+    if (cub->floor_rgb)
+        return (ft_check_rgb(cub->floor_rgb));
+    else (cub->ceilling_rgb)
+        return (ft_check_rgb(cub->ceilling_rgb));
+}
+
+int ft_texture(t_cub3d *cub, char *str)
+{
+    int i;
+    int j;
+
+    if ((ft_strncmp(str, "NO", 2) == 0 && cub->no_texture)
+        || (ft_strncmp(str, "SO", 2) == 0 && cub->so_texture)
+        || (ft_strncmp(str, "WE", 2) == 0 && cub->we_texture)
+        || (ft_strncmp(str, "EA", 2) == 0 && cub->ea_texture))
+        return (0);
+    i = 2;
+    while (check_ws(*str + i))
+        i++;
+    j = i;
+    while (ft_isprint(*str + j) && !check_ws(*str +j))
+        j++;
+    if (ft_strncmp(str, "NO", 2) == 0)
+        cub->no_texture = ft_substr(str, i, j);
+    else if (ft_strncmp(str, "SO", 2) == 0)
+        cub->so_texture = ft_substr(str, i, j);
+    else if (ft_strncmp(str, "WE", 2) == 0)
+        cub->we_texture = ft_substr(str, i, j);
+    else if (ft_strncmp(str, "EA", 2) == 0)
+        cub->ea_texture = ft_substr(str, i, j);
+    return (1);
+}
+
+int parsing(t_cub3d *cub, char *str)
+{
+    int i;
+
+    i = 0;
+    while (check_ws(*str))
+        str++;
+    if (!ft_strncmp(str, "NO", 2) || !ft_strncmp(str, "SO", 2) || !ft_strncmp(str, "WE", 2) || !ft_strncmp(str, "EA", 2))
+        i = ft_texture(cub, str);
+    else if (!ft_strncmp(str, "F", 1) || !ft_strncmp(str, "C", 1))
+        i = ft_floor_ceilling(cub, str);
+    return (i);
+}
+
 
 int check_empty(char *str)
 {
