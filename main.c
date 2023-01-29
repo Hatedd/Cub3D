@@ -2,7 +2,23 @@
 
 int ft_check_rgb(char *rgb)
 {
-    
+    int i;
+    int len;
+    char **tmp;
+
+    len = ft_strlen(rgb);
+    tmp = ft_split(rgb + 2, ',');
+    if (rgb[len - 1] == ',')
+        exit(printf("don't do that here :("));
+    i = 0;
+    while (tmp[i] != NULL)
+    {
+        len = ft_atoi(tmp[i]);
+        if (len > 255)
+            return (0);
+        i++;
+    }
+    return (0);
 }
 
 int check_ws(char c)
