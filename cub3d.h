@@ -1,6 +1,9 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include <stdio.h>
+# include <fcntl.h>
+
 typedef struct cub3d
 {
     char *no_texture;
