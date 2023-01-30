@@ -1,5 +1,14 @@
 #include "cub3d.h"
 
+void    ft_free(char **ptr)
+{
+    if (*ptr)
+    {
+        free(*ptr);
+        *ptr = NULL;
+    }
+}
+
 int ft_check_rgb(char *rgb)
 {
     int i;
@@ -48,7 +57,7 @@ int ft_floor_ceilling(t_cub3d *cub, char *str)
         cub->ceilling_rgb = ft_substr(str, i, j);
     if (cub->floor_rgb)
         return (ft_check_rgb(cub->floor_rgb));
-    else (cub->ceilling_rgb)
+    else if (cub->ceilling_rgb)
         return (ft_check_rgb(cub->ceilling_rgb));
 }
 
@@ -112,7 +121,12 @@ void    parsing(int fd, t_cub3d *cub)
         if (!check_empty(str))
         {
             if (!cub_getter(cub, str))
+                exit(printf("Invalide data\n"));
+            if ((cub->ceilling_rgb) && (cub->ea_texture) && (cub->floor_rgb)
+                && (cub->no_texture) && (cub->so_texture) && (cub->we_texture))
+                break;
         }
+        ft_free(&str);
     }
 }
 
