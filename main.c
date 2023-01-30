@@ -15,10 +15,21 @@ int ft_check_rgb(char *rgb)
     int len;
     char **tmp;
 
-    len = ft_strlen(rgb);
+    len = 2;
+    while (rgb[len])
+    {
+        i = 0;
+        while (ft_isdigit(rgb[len]) && rgb[len])
+            len++;
+        while (!ft_isdigit(rgb[len])  && rgb[len])
+        {
+            len++;
+            i++;
+        }
+        if (i > 1)
+            exit(write(2, "Invalide rgb data\n", 19));
+    }
     tmp = ft_split(rgb + 2, ',');
-    if (rgb[len - 1] == ',')
-        exit(printf("don't do that here :("));
     i = 0;
     while (tmp[i] != NULL)
     {
@@ -59,6 +70,7 @@ int ft_floor_ceilling(t_cub3d *cub, char *str)
         return (ft_check_rgb(cub->floor_rgb));
     else if (cub->ceilling_rgb)
         return (ft_check_rgb(cub->ceilling_rgb));
+    return (0); 
 }
 
 int ft_texture(t_cub3d *cub, char *str)
@@ -88,7 +100,7 @@ int ft_texture(t_cub3d *cub, char *str)
     return (1);
 }
 
-int parsing(t_cub3d *cub, char *str)
+int parsing_textur(t_cub3d *cub, char *str)
 {
     int i;
 
@@ -116,11 +128,11 @@ void    parsing(int fd, t_cub3d *cub)
 {
     char *str;
 
-    while (str = get_next_line(fd))
+    while ((str = get_next_line(fd)))
     {
         if (!check_empty(str))
         {
-            if (!cub_getter(cub, str))
+            if (!parsing_textur(cub, str))
                 exit(printf("Invalide data\n"));
             if ((cub->ceilling_rgb) && (cub->ea_texture) && (cub->floor_rgb)
                 && (cub->no_texture) && (cub->so_texture) && (cub->we_texture))
@@ -134,6 +146,7 @@ int init_cub(char *file, t_cub3d *cub)
 {
     int fd;
 
+    
     fd = open(file, O_RDONLY);
     if (fd == -1)
         exit(printf("error in file or path given"));
@@ -149,7 +162,7 @@ int init_cub(char *file, t_cub3d *cub)
 int main(int ac, char **av)
 {
     t_cub3d     cub;
-    t_data      data;
+    // t_data      data;
     int         fd;
 
     if (ac > 2)
