@@ -10,14 +10,14 @@ CC = @cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror 
 
 
 all : 	${NAME}
 
 ${NAME} : ${OBJS}
 		@make -C libft/
-		${CC} ${CFLAGS} libft/libft.a -L /Users/$(USER)/readline/lib -l readline ${OBJS} -o ${NAME}
+		${CC} ${CFLAGS} libft/libft.a ${OBJS} -o ${NAME}
 
 clean :
 	@make clean -C libft/
