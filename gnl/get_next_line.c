@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 01:42:19 by yobenali          #+#    #+#             */
-/*   Updated: 2023/01/30 17:36:40 by yobenali         ###   ########.fr       */
+/*   Updated: 2021/12/09 21:50:22 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*strline(char *str)
 		i++;
 	if (str[i] == '\n')
 		i++;
-	tab = (char *)ft_mycalloc((i + 1), sizeof(char));
+	tab = (char *)ft_calloc((i + 1), sizeof(char));
 	if (!tab)
 		return (NULL);
 	while (j < i)
@@ -59,7 +59,7 @@ char	*to_save(char **saved, int size)
 		return (free_garbeg(saved, NULL));
 	while (saved[0][size] && saved[0][size] != '\n')
 		size++;
-	new = (char *)ft_mycalloc((ft_mystrlen(*saved) - size + 1), sizeof(char));
+	new = (char *)ft_calloc((ft_strlen(*saved) - size + 1), sizeof(char));
 	if (!new)
 		return (free_garbeg(saved, NULL));
 	if (saved[0][size])
@@ -97,7 +97,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0)
 		return (NULL);
-	buf = (char *)ft_mycalloc((1 + 1), sizeof(char));
+	buf = (char *)ft_calloc((1 + 1), sizeof(char));
 	if (!buf)
 		return (NULL);
 	len = 1;

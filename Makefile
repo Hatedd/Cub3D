@@ -4,24 +4,21 @@ SRCS =  main.c \
 	gnl/get_next_line.c \
 	gnl/get_next_line_utils.c \
 
-OBJS = $(SRCS:.c=.o)
-
 CC = @cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra -Werror 
-
+CFLAGS = -Wall -Wextra -Werror
 
 all : 	${NAME}
 
-${NAME} : ${OBJS}
+${NAME} : ${SRCS}
 		@make -C libft/
-		${CC} ${CFLAGS} libft/libft.a ${OBJS} -o ${NAME}
+		${CC} ${CFLAGS} libft/libft.a ${SRCS} -o ${NAME}
 
 clean :
 	@make clean -C libft/
-	@${RM} ${OBJS}
+	@${RM} ${NAME}
 
 fclean : clean
 	@make fclean -C libft/

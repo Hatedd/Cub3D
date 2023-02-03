@@ -21,7 +21,7 @@ int ft_check_rgb(char *rgb)
         i = 0;
         while (ft_isdigit(rgb[len]) && rgb[len])
             len++;
-        while (!ft_isdigit(rgb[len])  && rgb[len])
+        while (!ft_isdigit(rgb[len])  && rgb[len] )
         {
             len++;
             i++;
@@ -55,7 +55,7 @@ int ft_floor_ceilling(t_cub3d *cub, char *str)
 
     if ((ft_strncmp(str, "F", 1) == 0 && cub->floor_rgb)
         || (ft_strncmp(str, "C", 1) == 0 && cub->ceilling_rgb))
-        return (0);
+        return (1);
     i = 1;
     while (check_ws(*str + i))
         i++;
@@ -82,7 +82,7 @@ int ft_texture(t_cub3d *cub, char *str)
         || (ft_strncmp(str, "SO", 2) == 0 && cub->so_texture)
         || (ft_strncmp(str, "WE", 2) == 0 && cub->we_texture)
         || (ft_strncmp(str, "EA", 2) == 0 && cub->ea_texture))
-        return (0);
+        return (1);
     i = 2;
     while (check_ws(*str + i))
         i++;
@@ -108,9 +108,12 @@ int parsing_textur(t_cub3d *cub, char *str)
     while (check_ws(*str))
         str++;
     if (!ft_strncmp(str, "NO", 2) || !ft_strncmp(str, "SO", 2) || !ft_strncmp(str, "WE", 2) || !ft_strncmp(str, "EA", 2))
+    {    
         i = ft_texture(cub, str);
+    }
     else if (!ft_strncmp(str, "F", 1) || !ft_strncmp(str, "C", 1))
         i = ft_floor_ceilling(cub, str);
+    // else if (i == -1)
     return (i);
 }
 
@@ -128,19 +131,24 @@ void    parsing(int fd, t_cub3d *cub)
 {
     char *str;
 
-    while ((str = get_next_line(fd)))
-    {
+
+    str = get_next_line(fd);
+    // while ((str = get_next_line(fd)))
+    // {
+        printf("%s", str);
         if (!check_empty(str))
         {
             if (!parsing_textur(cub, str))
                 exit(printf("Invalide data\n"));
             if ((cub->ceilling_rgb) && (cub->ea_texture) && (cub->floor_rgb)
                 && (cub->no_texture) && (cub->so_texture) && (cub->we_texture))
-                break;
+                return ;
+                // break;
         }
-        ft_free(&str);
+        // if (str != NULL)
+        //     ft_free(&str);
     }
-}
+// }
 
 int init_cub(char *file, t_cub3d *cub)
 {
@@ -164,10 +172,15 @@ int main(int ac, char **av)
     t_cub3d     cub;
     // t_data      data;
     int         fd;
-
+    int         len;
+    
     if (ac > 2)
         printf("Error Invalide args\n");
+    len = ft_strlen(av[1]) - 4;
+    if (ft_strncmp(&av[1][len], ".cub", 4))
+        exit(write(2, "Invalide file name\n", 20));
     fd = init_cub(av[1], &cub);
     parsing(fd, &cub);
+    system("leaks Cub3D");
     return (0);
 }
