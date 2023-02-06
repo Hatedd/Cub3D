@@ -14,6 +14,7 @@ typedef struct cub3d
     char *ea_texture;
     char *floor_rgb;
     char *ceilling_rgb;
+    char **infile;
     char **map;
 } t_cub3d;
 
