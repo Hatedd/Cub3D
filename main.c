@@ -126,47 +126,82 @@ void ft_copy_map(t_cub3d *cub, int pos)
         cub->map[i] = ft_strdup(cub->infile[pos]);
         i++;
         pos++;
-    }    
+    }
 }
 
-int mat_len(t_cub3d *cub)
+int mat_len(t_cub3d *cub, int pos)
 {
     int i;
 
     i = 0;
-    while (cub->map[i])
+    while (cub->infile[pos++])
         i++;
     return (i);
 }
 
-int     parsing_map(t_cub3d *cub, int pos)
+void    ft_updown(char *str)
 {
     int i;
-    int j;
+
+    i = 0;
+    while (str[i])
+    {
+        if (check_ws(str[i]) || str[i] == '1')
+            i++;
+        else
+        {
+            printf("%s\n", str);
+            exit(write(2, "shit Invalide map :(\n", 17));
+        }
+    }
+}
+
+void    ft_midline(char *str)
+{
+    int i;
+    int line_len;
+
+    i = 0;
+    line_len = ft_strlen(str);
+    // printf("%d\n", line_len);
+    while(check_ws(str[i]))
+        i++;
+    if (str[i] != '1' && str[line_len - 1] != '1')
+        exit(write(2, "Invalide map :(\n", 17));
+    while(str[i])
+    {
+        if (str[i] != '0' && str[i] != '1' && str[i] != 'N' && str[i] != 'S' && str[i] != 'E' && str[i] != 'W' && str[i] != ' ')
+        {
+            exit(write(2, "Invalide map :(\n", 17));
+        }
+        i++;
+    }
+
+}
+
+int parsing_map(t_cub3d *cub, int pos)
+{
+    int i;
     int len;
 
     i = 0;
-    len = mat_len(cub);
-    cub->map = malloc(sizeof(char *) * len);
+    len = mat_len(cub, pos);
+    cub->map = malloc(sizeof(char *) * len + 1);
+    if (!cub->map)
+        return (0);
     ft_copy_map(cub, pos);
-    while (cub->map[i])
+    while (i < len)
     {
-        j = 0;
-        while (check_ws(cub->map[i][j]))
+        if ((i == 0) || (i == len - 1))
         {
-            j++;
-            if ((i == 0 || i = len -1))
+            ft_updown(cub->map[i]);
         }
-        {
-            printf("%d\n", j);
-            exit(write(2, "Invalide map :(\n", 17));
-        }
-        if (i == len - 1 && !check_ws(cub->map[i][j]) && cub->map[i][j] != 1 \
-            && cub->map[i][j])
-            exit(write(2, "Invalide map :(\n", 17));
+        else
+            ft_midline(cub->map[i]);
+        printf("%s\n", cub->map[i]);
         i++;
     }
-    return (0);
+    return (1);
 }
 
 void    parsing(t_cub3d *cub)
@@ -207,12 +242,12 @@ void init_cub(char *file, t_cub3d *cub)
     cub->ceilling_rgb = NULL;
     str = get_next_line(fd);
     cub->infile = ft_split(str, '\n');
-    int i = 0;
-    while(cub->infile[i])
-    {
-        printf("%s\n", cub->infile[i]);
-        i++;
-    }
+    // int i = 0;
+    // while(cub->infile[i])
+    // {
+    //     printf("%s\n", cub->infile[i]);
+    //     i++;
+    // }
     close (fd);
 }
 
