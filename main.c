@@ -163,7 +163,6 @@ void    ft_midline(char *str)
 
     i = 0;
     line_len = ft_strlen(str);
-    // printf("%d\n", line_len);
     while(check_ws(str[i]))
         i++;
     if (str[i] != '1' && str[line_len - 1] != '1')
@@ -182,23 +181,27 @@ void    ft_midline(char *str)
 int parsing_map(t_cub3d *cub, int pos)
 {
     int i;
+    int last;
     int len;
 
     i = 0;
     len = mat_len(cub, pos);
+    last = len - 1;
     cub->map = malloc(sizeof(char *) * len + 1);
     if (!cub->map)
         return (0);
     ft_copy_map(cub, pos);
     while (i < len)
     {
-        if ((i == 0) || (i == len - 1))
-        {
+            printf("%d->>>>>>>>\n", len);
+        if (i == 0 || i == last)
             ft_updown(cub->map[i]);
+        else if (i == last)
+        {
+            return (1);
         }
         else
             ft_midline(cub->map[i]);
-        printf("%s\n", cub->map[i]);
         i++;
     }
     return (1);
@@ -207,14 +210,20 @@ int parsing_map(t_cub3d *cub, int pos)
 void    parsing(t_cub3d *cub)
 {
     int i;
+    int check;
 
     i = 0;
+    check = 0;
     while (cub->infile[i])
     {
         if (!parsing_textur(cub, cub->infile[i]))
         {
-            if (!parsing_map(cub, i))
+            if (!(check = parsing_map(cub, i)))
+            {
                 exit(printf("Invalide data\n"));
+            }
+            if (check)
+                break;
         }
         i++;
     }
