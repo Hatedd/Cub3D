@@ -116,14 +116,30 @@ int parsing_textur(t_cub3d *cub, char *str)
     return (i);
 }
 
+int ft_chr_pos(t_cub3d *cub, int pos)
+{
+    if (!ft_strchr(cub->map[pos], 'E'))
+        cub->p_flag++;
+    else if (!ft_strchr(cub->map[pos], 'S'))
+        cub->p_flag++;
+    else if (!ft_strchr(cub->map[pos], 'N'))
+        cub->p_flag++;
+    else if (!ft_strchr(cub->map[pos], 'W'))
+        cub->p_flag++;
+    return(1);
+}
+
 void ft_copy_map(t_cub3d *cub, int pos)
 {
     int i;
+    int check_p;
 
     i = 0;
     while (cub->infile[pos])
     {
         cub->map[i] = ft_strdup(cub->infile[pos]);
+        if (ft_chr_pos(cub, i))
+            exit(write(2, "Invalide map\n", 14));
         i++;
         pos++;
     }
@@ -229,9 +245,7 @@ void    parsing(t_cub3d *cub)
     }
     if ((cub->ceilling_rgb) && (cub->ea_texture) && (cub->floor_rgb)
         && (cub->no_texture) && (cub->so_texture) && (cub->we_texture))
-    {
         return ;
-    }
     else
         exit(write(2, "Error missing data\n", 20));
 }
@@ -249,21 +263,15 @@ void init_cub(char *file, t_cub3d *cub)
     cub->ea_texture = NULL;
     cub->floor_rgb = NULL;
     cub->ceilling_rgb = NULL;
+    cub->p_flag = 0;
     str = get_next_line(fd);
     cub->infile = ft_split(str, '\n');
-    // int i = 0;
-    // while(cub->infile[i])
-    // {
-    //     printf("%s\n", cub->infile[i]);
-    //     i++;
-    // }
     close (fd);
 }
 
 int main(int ac, char **av)
 {
     t_cub3d     cub;
-    // t_data      data;
     int         len;
     
     if (ac > 2)
@@ -273,6 +281,5 @@ int main(int ac, char **av)
         exit(write(2, "Invalide file name\n", 20));
     init_cub(av[1], &cub);
     parsing(&cub);
-    // system("leaks Cub3D");
     return (0);
 }

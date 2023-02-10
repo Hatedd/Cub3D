@@ -16,6 +16,7 @@ typedef struct cub3d
     char *ceilling_rgb;
     char **infile;
     char **map;
+    int  p_flag;
 } t_cub3d;
 
 typedef struct data
