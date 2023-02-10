@@ -116,33 +116,40 @@ int parsing_textur(t_cub3d *cub, char *str)
     return (i);
 }
 
-int ft_chr_pos(t_cub3d *cub, int pos)
+int ft_chr_pos(t_cub3d *cub)
 {
-    if (!ft_strchr(cub->map[pos], 'E'))
-        cub->p_flag++;
-    else if (!ft_strchr(cub->map[pos], 'S'))
-        cub->p_flag++;
-    else if (!ft_strchr(cub->map[pos], 'N'))
-        cub->p_flag++;
-    else if (!ft_strchr(cub->map[pos], 'W'))
-        cub->p_flag++;
+    int i;
+
+    i = 0;
+    while (i < cub->map_len)
+    {
+        printf("%s\n", cub->map[i]);
+        if (!ft_strchr(cub->map[i], 'E'))
+            cub->p_flag++;
+        else if (!ft_strchr(cub->map[i], 'S'))
+            cub->p_flag++;
+        else if (!ft_strchr(cub->map[i], 'N'))
+            cub->p_flag++;
+        else if (!ft_strchr(cub->map[i], 'W'))
+            cub->p_flag++;
+        i++;
+    }
     return(1);
 }
 
 void ft_copy_map(t_cub3d *cub, int pos)
 {
     int i;
-    int check_p;
 
     i = 0;
     while (cub->infile[pos])
     {
         cub->map[i] = ft_strdup(cub->infile[pos]);
-        if (ft_chr_pos(cub, i))
-            exit(write(2, "Invalide map\n", 14));
         i++;
         pos++;
     }
+    if (ft_chr_pos(cub))
+        exit(write(2, "Invalide map\n", 14));
 }
 
 int mat_len(t_cub3d *cub, int pos)
@@ -198,18 +205,16 @@ int parsing_map(t_cub3d *cub, int pos)
 {
     int i;
     int last;
-    int len;
 
     i = 0;
-    len = mat_len(cub, pos);
-    last = len - 1;
-    cub->map = malloc(sizeof(char *) * len + 1);
+    cub->map_len = mat_len(cub, pos);
+    last = cub->map_len - 1;
+    cub->map = malloc(sizeof(char *) * cub->map_len + 1);
     if (!cub->map)
         return (0);
     ft_copy_map(cub, pos);
-    while (i < len)
+    while (i < cub->map_len)
     {
-            printf("%d->>>>>>>>\n", len);
         if (i == 0 || i == last)
             ft_updown(cub->map[i]);
         else if (i == last)
