@@ -116,12 +116,101 @@ int parsing_textur(t_cub3d *cub, char *str)
 	return (i);
 }
 
+void ft_ending(t_cub3d *cub, int i, int j)
+{
+	int len;
+	int checker;
+
+	len = ft_strlen(cub->map[i]);
+	while (check_ws(cub->map[i][len - 1]))
+		len--;
+	while (check_ws(cub->map[i][j]))
+		j++;
+	while (j < len)
+	{
+		checker = 0;
+		while (cub->map[i + checker][j] == ' ')
+		{
+			if (cub->m_flag)
+				if (cub->map[i + checker][j - 1] != '1')
+					exit(write(2, "Map walls error\n", 17));
+			checker--;
+			if (cub->map[i + checker][j] == '1')
+			{
+				if (cub->m_flag)
+					if (cub->map[i + checker][j - 1] != '1')
+						exit(write(2, "Map walls error\n", 17));
+				cub->m_flag = 0;
+				break;
+			}
+			else if (cub->map[i + checker][j] != '1' && cub->map[i + checker][j] != ' ')
+				exit(write(2, "Map walls error\n", 17));
+		}
+		j++;
+	}
+}
+
+void ft_beginning(t_cub3d *cub, int i, int j)
+{
+	int len;
+	int checker;
+
+	len = ft_strlen(cub->map[i]);
+	while (check_ws(cub->map[i][len - 1]))
+		len--;
+	while (check_ws(cub->map[i][j]))
+		j++;
+	while (j < len)
+	{
+		checker = 0;
+		while (cub->map[i + checker][j] == ' ')
+		{
+			if (cub->m_flag)
+				if (cub->map[i + checker][j - 1] != '1')
+					exit(write(2, "Map walls error\n", 17));
+			checker++;
+			if (cub->map[i + checker][j] == '1')
+			{
+				if (cub->m_flag)
+					if (cub->map[i + checker][j - 1] != '1')
+						exit(write(2, "Map walls error\n", 17));
+				cub->m_flag = 0;
+				break;
+			}
+			else if (cub->map[i + checker][j] != '1' && cub->map[i + checker][j] != ' ')
+				exit(write(2, "Map walls error\n", 17));
+		}
+		j++;
+	}
+}
+
+void ft_mid(t_cub3d *cub, int i, int j)
+{
+	int len;
+	char c;
+	len = ft_strlen(cub->map[i]);
+	while (check_ws(cub->map[i][len - 1]))
+		len--;
+	while (check_ws(cub->map[i][j]))
+		j++;
+	while (j < len)
+	{
+		c = cub->map[i][j];
+		if (c == '0' || c == 'E' || c == 'W' || c == 'S' || c == 'N')
+		{
+			if ((cub->map[i - 1][j] == ' ' || cub->map[i + 1][j] == ' ' || \
+				cub->map[i][j - 1] == ' ' || cub->map[i][j + 1] == ' ') && \
+				cub->map[i][j + 1])
+				exit(write(2, "Invalide map\n", 14));
+		}
+		j++;
+	}
+}
+
 void ft_chflood(t_cub3d *cub)
 {
 	int	i;
 	int j;
-	int checker;
-	int len;
 
 	i = 0;
 	cub->m_flag = 1;
@@ -129,35 +218,11 @@ void ft_chflood(t_cub3d *cub)
 	{
 		j = 0;
 		if (i == 0)
-		{
-			len = ft_strlen(cub->map[i]);
-			while (check_ws(cub->map[i][len - 1]))
-				len--;
-			while (check_ws(cub->map[i][j]))
-				j++;
-			while (j < len)
-			{
-				checker = 0;
-				while (cub->map[i + checker][j] == ' ')
-				{
-					if (cub->m_flag)
-						if (cub->map[i + checker][j - 1] != '1')
-							exit(write(2, "Map walls error\n", 17));
-					checker++;
-					if (cub->map[i + checker][j] == '1')
-					{
-						if (cub->m_flag)
-							if (cub->map[i + checker][j - 1] != '1')
-								exit(write(2, "Map walls error\n", 17));
-						cub->m_flag = 0;
-						break;
-					}
-					else if (cub->map[i + checker][j] != '1' && cub->map[i + checker][j] != ' ')
-						exit(write(2, "Map walls error\n", 17));
-				}
-				j++;
-			}
-		}
+			ft_beginning(cub, i, j);
+		else if (i == cub->map_len - 1)
+			ft_ending(cub, i, j);
+		else
+			ft_mid(cub, i, j);
 		i++;
 	}
 }
@@ -169,7 +234,6 @@ int player_pos(t_cub3d *cub)
 	i = 0;
 	while (i < cub->map_len)
 	{
-		printf("%s\n", cub->map[i]);
 		if (ft_strchr(cub->map[i], 'E'))
 			cub->p_flag++;
 		else if (ft_strchr(cub->map[i], 'S'))
@@ -222,7 +286,6 @@ void	ft_updown(char *str)
 			i++;
 		else
 		{
-			printf("%s\n", str);
 			exit(write(2, "Invalide map :(\n", 17));
 		}
 	}
@@ -292,7 +355,7 @@ void    parsing(t_cub3d *cub)
 		{
 			if (!(check = parsing_map(cub, i)))
 			{
-				exit(printf("Invalide data\n"));
+				exit(write(2, "Invalide data\n", 15));
 			}
 			if (check)
 				break;
@@ -312,7 +375,7 @@ void init_cub(char *file, t_cub3d *cub)
 
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
-		exit(printf("error in file or path given"));
+		exit(write(2, "error in file or path given\n", 29));
 	cub->no_texture = NULL;
 	cub->so_texture = NULL;
 	cub->we_texture = NULL;
@@ -331,8 +394,8 @@ int main(int ac, char **av)
 	t_cub3d	cub;
 	int		len;
 
-	if (ac > 2)
-		printf("Error Invalide args\n");
+	if (ac != 2)
+		exit(write(2, "Error Invalide args\n", 21));
 	len = ft_strlen(av[1]) - 4;
 	if (ft_strncmp(&av[1][len], ".cub", 4))
 		exit(write(2, "Invalide file name\n", 20));
