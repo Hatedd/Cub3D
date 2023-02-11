@@ -3,6 +3,7 @@
 
 # include <stdio.h>
 # include <fcntl.h>
+# include <mlx.h>
 # include "gnl/get_next_line.h"
 # include "libft/libft.h"
 
@@ -25,6 +26,10 @@ typedef struct data
 {
     void    *mlx;
     void    *win;
+    void    *t_no;
+    void    *t_so;
+    void    *t_we;
+    void    *t_ea;
 }   t_data;
 
 

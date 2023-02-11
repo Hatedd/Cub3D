@@ -8,13 +8,15 @@ CC = @cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address
+
+MLX =  -Imlx -lmlx -framework OpenGl -framework Appkit
 
 all : 	${NAME}
 
 ${NAME} : ${SRCS}
 		@make -C libft/
-		${CC} ${CFLAGS} libft/libft.a ${SRCS} -o ${NAME}
+		${CC} ${CFLAGS} ${MLX} libft/libft.a ${SRCS} -o ${NAME}
 
 clean :
 	@make clean -C libft/

@@ -342,7 +342,19 @@ int parsing_map(t_cub3d *cub, int pos)
 	return (1);
 }
 
-void    parsing(t_cub3d *cub)
+void	ft_init_data(t_cub3d *cub, t_data *data)
+{
+	data->mlx = mlx_init();
+	data->win = mlx_new_window(data->mlx, 500, 300, "Cub3D");
+	data->t_no = mlx_xpm_file_to_image(data->mlx, cub->no_texture, 0, 0);
+	data->t_ea = mlx_xpm_file_to_image(data->mlx, cub->ea_texture, 0, 0);
+	data->t_we = mlx_xpm_file_to_image(data->mlx, cub->we_texture, 0, 0);
+	data->t_so = mlx_xpm_file_to_image(data->mlx, cub->so_texture, 0, 0);
+	if (!data->t_ea || !data->t_no || !data->t_so || !data->t_we)
+		exit(write(2, "Invalide textur\n", 17));
+}
+
+void    parsing(t_cub3d *cub, t_data *data)
 {
 	int i;
 	int check;
@@ -364,7 +376,10 @@ void    parsing(t_cub3d *cub)
 	}
 	if ((cub->ceilling_rgb) && (cub->ea_texture) && (cub->floor_rgb)
 		&& (cub->no_texture) && (cub->so_texture) && (cub->we_texture))
-		return ;
+		{
+			ft_init_data(cub, data);
+			return ;
+		}
 	else
 		exit(write(2, "Error missing data\n", 20));
 }
@@ -392,14 +407,16 @@ void init_cub(char *file, t_cub3d *cub)
 int main(int ac, char **av)
 {
 	t_cub3d	cub;
+	t_data data;
 	int		len;
 
-	if (ac != 2)
-		exit(write(2, "Error Invalide args\n", 21));
-	len = ft_strlen(av[1]) - 4;
-	if (ft_strncmp(&av[1][len], ".cub", 4))
-		exit(write(2, "Invalide file name\n", 20));
-	init_cub(av[1], &cub);
-	parsing(&cub);
+	if (ac == 2)
+	{
+		len = ft_strlen(av[1]) - 4;
+		if (ft_strncmp(&av[1][len], ".cub", 4))
+			exit(write(2, "Invalide file name\n", 20));
+		init_cub(av[1], &cub);
+		parsing(&cub, &data);
+	}
 	return (0);
 }
