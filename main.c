@@ -134,6 +134,8 @@ int ft_chr_pos(t_cub3d *cub)
             cub->p_flag++;
         i++;
     }
+    if (cub->p_flag != 1)
+        return (0);
     return(1);
 }
 
@@ -174,7 +176,7 @@ void    ft_updown(char *str)
         else
         {
             printf("%s\n", str);
-            exit(write(2, "shit Invalide map :(\n", 17));
+            exit(write(2, "Invalide map :(\n", 17));
         }
     }
 }
@@ -218,9 +220,7 @@ int parsing_map(t_cub3d *cub, int pos)
         if (i == 0 || i == last)
             ft_updown(cub->map[i]);
         else if (i == last)
-        {
             return (1);
-        }
         else
             ft_midline(cub->map[i]);
         i++;

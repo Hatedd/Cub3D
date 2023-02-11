@@ -18,7 +18,7 @@ typedef struct cub3d
     char **map;
     int  p_flag;
     int  map_len;
-} t_cub3d;
+}   t_cub3d;
 
 typedef struct data
 {
