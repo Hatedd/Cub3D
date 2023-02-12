@@ -344,12 +344,16 @@ int parsing_map(t_cub3d *cub, int pos)
 
 void	ft_init_data(t_cub3d *cub, t_data *data)
 {
-	// data->mlx = mlx_init();
-	// data->win = mlx_new_window(data->mlx, 1500, 1300, "Cub3D");
-	data->t_no = mlx_xpm_file_to_image(data->mlx, cub->no_texture, 0, 0);
-	data->t_ea = mlx_xpm_file_to_image(data->mlx, cub->ea_texture, 0, 0);
-	data->t_we = mlx_xpm_file_to_image(data->mlx, cub->we_texture, 0, 0);
-	data->t_so = mlx_xpm_file_to_image(data->mlx, cub->so_texture, 0, 0);
+	data->img_h = 0;
+	data->img_w = 0;
+	data->map_h = 640;
+	data->map_w = 2176;
+	data->mlx = mlx_init();
+	data->win = mlx_new_window(data->mlx, data->map_w, data->map_h, "Cub3D");
+	data->t_no = mlx_xpm_file_to_image(data->mlx, cub->no_texture, &data->img_w, &data->img_h);
+	data->t_ea = mlx_xpm_file_to_image(data->mlx, cub->ea_texture, &data->img_w, &data->img_h);
+	data->t_we = mlx_xpm_file_to_image(data->mlx, cub->we_texture, &data->img_w, &data->img_h);
+	data->t_so = mlx_xpm_file_to_image(data->mlx, cub->so_texture, &data->img_w, &data->img_h);
 	if (!data->t_ea || !data->t_no || !data->t_so || !data->t_we)
 		exit(write(2, "Invalide textur\n", 17));
 }

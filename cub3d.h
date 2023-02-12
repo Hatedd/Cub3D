@@ -30,6 +30,10 @@ typedef struct data
     void    *t_so;
     void    *t_we;
     void    *t_ea;
+    int  img_h;
+    int  img_w;
+    int  map_h;
+    int  map_w;
 }   t_data;
 
 
