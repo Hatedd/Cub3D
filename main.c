@@ -84,7 +84,7 @@ int ft_texture(t_cub3d *cub, char *str)
 		|| (ft_strncmp(str, "EA", 2) == 0 && cub->ea_texture))
 		return (0);
 	i = 2;
-	while (check_ws(*str + i))
+	while (check_ws(str[i]))
 		i++;
 	j = i;
 	while (ft_isprint(*str + j) && !check_ws(*str +j))
@@ -344,8 +344,8 @@ int parsing_map(t_cub3d *cub, int pos)
 
 void	ft_init_data(t_cub3d *cub, t_data *data)
 {
-	data->mlx = mlx_init();
-	data->win = mlx_new_window(data->mlx, 500, 300, "Cub3D");
+	// data->mlx = mlx_init();
+	// data->win = mlx_new_window(data->mlx, 1500, 1300, "Cub3D");
 	data->t_no = mlx_xpm_file_to_image(data->mlx, cub->no_texture, 0, 0);
 	data->t_ea = mlx_xpm_file_to_image(data->mlx, cub->ea_texture, 0, 0);
 	data->t_we = mlx_xpm_file_to_image(data->mlx, cub->we_texture, 0, 0);
