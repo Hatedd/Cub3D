@@ -421,6 +421,7 @@ int main(int ac, char **av)
 			exit(write(2, "Invalide file name\n", 20));
 		init_cub(av[1], &cub);
 		parsing(&cub, &data);
+		mlx_loop(data.mlx);
 	}
 	return (0);
 }
