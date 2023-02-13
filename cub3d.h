@@ -3,7 +3,7 @@
 
 # include <stdio.h>
 # include <fcntl.h>
-# include <mlx.h>
+# include "minilibx_opengl_20191021/mlx.h"
 # include "gnl/get_next_line.h"
 # include "libft/libft.h"
 

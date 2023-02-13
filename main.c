@@ -9,6 +9,25 @@ void	ft_free(char **ptr)
 	}
 }
 
+int	ft_myatoi(const char *str)
+{
+	int				i;
+	unsigned long	r;
+
+	i = 0;
+	r = 0;
+	if (str[i] == '+')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		r = r * 10 + str[i] - 48;
+		i++;
+	}
+	if (str[i] == '-' || str[i] != '\0')
+		exit(write(2, "Invalide rgb\n", 14));
+	return (r);
+}
+
 int ft_check_rgb(char *rgb)
 {
 	int i;
@@ -20,16 +39,22 @@ int ft_check_rgb(char *rgb)
 	{
 		i = 0;
 		while (ft_isdigit(rgb[len]) && rgb[len])
-			len++;
-		while (!ft_isdigit(rgb[len])  && rgb[len] )
 		{
 			len++;
 			i++;
 		}
-		if (i > 1)
+		if (!ft_isdigit(rgb[len])  && rgb[len] && i == 2)
+		{
+			len++;
+			i++;
+		}
+		if (i > 3)
 			exit(write(2, "Invalide rgb data\n", 19));
 	}
-	tmp = ft_split(rgb + 2, ',');
+	tmp = ft_split(rgb + 1, ',');
+	i = 0;
+	while (tmp[i])
+		printf("%s\n", tmp[i++]);
 	i = 0;
 	while (tmp[i] != NULL)
 	{
@@ -38,6 +63,7 @@ int ft_check_rgb(char *rgb)
 			return (0);
 		i++;
 	}
+	ft_free(tmp);
 	return (1);
 }
 
@@ -64,12 +90,12 @@ int ft_floor_ceilling(t_cub3d *cub, char *str)
 		j++;
 	if (ft_strncmp(str, "F", 1) == 0)
 		cub->floor_rgb = ft_substr(str, i, j);
-	if (ft_strncmp(str, "C", 1) == 0)
+	else if (ft_strncmp(str, "C", 1) == 0)
 		cub->ceilling_rgb = ft_substr(str, i, j);
-	if (cub->floor_rgb)
-		return (ft_check_rgb(cub->floor_rgb));
-	else if (cub->ceilling_rgb)
+	if (cub->ceilling_rgb)
 		return (ft_check_rgb(cub->ceilling_rgb));
+	else if (cub->floor_rgb)
+		return (ft_check_rgb(cub->floor_rgb));
 	return (1);
 }
 
@@ -198,6 +224,8 @@ void ft_mid(t_cub3d *cub, int i, int j)
 		c = cub->map[i][j];
 		if (c == '0' || c == 'E' || c == 'W' || c == 'S' || c == 'N')
 		{
+			if ((size_t)j > ft_strlen(cub->map[i - 1]) || (size_t)j > ft_strlen(cub->map[i + 1]))
+				exit(write(2, "Invalide map\n", 19));
 			if ((cub->map[i - 1][j] == ' ' || cub->map[i + 1][j] == ' ' || \
 				cub->map[i][j - 1] == ' ' || cub->map[i][j + 1] == ' ') && \
 				cub->map[i][j + 1])
@@ -325,6 +353,8 @@ int parsing_map(t_cub3d *cub, int pos)
 	i = 0;
 	cub->map_len = mat_len(cub, pos);
 	last = cub->map_len - 1;
+	if (!last)
+		exit(write(2, "map not found\n", 15));
 	cub->map = malloc(sizeof(char *) * cub->map_len + 1);
 	if (!cub->map)
 	    return (0);
@@ -347,7 +377,7 @@ void	ft_init_data(t_cub3d *cub, t_data *data)
 	data->img_h = 0;
 	data->img_w = 0;
 	data->map_h = 640;
-	data->map_w = 2176;
+	data->map_w = 1728;
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, data->map_w, data->map_h, "Cub3D");
 	data->t_no = mlx_xpm_file_to_image(data->mlx, cub->no_texture, &data->img_w, &data->img_h);
@@ -380,10 +410,10 @@ void    parsing(t_cub3d *cub, t_data *data)
 	}
 	if ((cub->ceilling_rgb) && (cub->ea_texture) && (cub->floor_rgb)
 		&& (cub->no_texture) && (cub->so_texture) && (cub->we_texture))
-		{
-			ft_init_data(cub, data);
-			return ;
-		}
+	{
+		ft_init_data(cub, data);
+		return ;
+	}
 	else
 		exit(write(2, "Error missing data\n", 20));
 }
@@ -421,7 +451,7 @@ int main(int ac, char **av)
 			exit(write(2, "Invalide file name\n", 20));
 		init_cub(av[1], &cub);
 		parsing(&cub, &data);
-		mlx_loop(data.mlx);
+		// mlx_loop(data.mlx);
 	}
 	return (0);
 }

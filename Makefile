@@ -3,6 +3,7 @@ NAME = Cub3D
 SRCS =  main.c \
 	gnl/get_next_line.c \
 	gnl/get_next_line_utils.c \
+	minilibx_opengl_20191021/libmlx.a\
 
 CC = @cc
 
@@ -10,7 +11,7 @@ RM = rm -f
 
 CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
-MLX =  -Imlx -lmlx -framework OpenGl -framework Appkit
+MLX =  -framework OpenGl -framework Appkit
 
 all : 	${NAME}
 
