@@ -27,14 +27,25 @@ int	ft_myatoi(const char *str)
 		exit(write(2, "Invalide rgb\n", 14));
 	return (r);
 }
+int check_ws(char c)
+{
+	if ((c >= 9 && c <= 13) || c == 32)
+		return (1);
+	return (0);
+}
 
 int ft_check_rgb(char *rgb)
 {
 	int i;
 	int len;
+	int ccheck;
 	char **tmp;
 
 	len = 2;
+	ccheck = 0;
+	while (check_ws(rgb[len]))
+		len++;
+	tmp = ft_split(rgb + len, ',');
 	while (rgb[len])
 	{
 		i = 0;
@@ -43,22 +54,24 @@ int ft_check_rgb(char *rgb)
 			len++;
 			i++;
 		}
-		if (!ft_isdigit(rgb[len])  && rgb[len] && i == 2)
+		if (rgb[len] == ',' && rgb[len])
 		{
 			len++;
-			i++;
+			i = 0;
+			ccheck++;
 		}
-		if (i > 3)
+		if (!ft_isdigit(rgb[len]) && rgb[len] != ',' && rgb[len])
+		{
+			printf("shit\n");
+			exit(write(2, "Invalide rgb data\n", 19));
+		}
+		if ((ccheck != 2 || i > 2) && !rgb[len])
 			exit(write(2, "Invalide rgb data\n", 19));
 	}
-	tmp = ft_split(rgb + 1, ',');
-	i = 0;
-	while (tmp[i])
-		printf("%s\n", tmp[i++]);
 	i = 0;
 	while (tmp[i] != NULL)
 	{
-		len = ft_atoi(tmp[i]);
+		len = ft_myatoi(tmp[i]);
 		if (len > 255)
 			return (0);
 		i++;
@@ -67,12 +80,6 @@ int ft_check_rgb(char *rgb)
 	return (1);
 }
 
-int check_ws(char c)
-{
-	if ((c >= 9 && c <= 13) || c == 32)
-		return (1);
-	return (0);
-}
 
 int ft_floor_ceilling(t_cub3d *cub, char *str)
 {
@@ -451,7 +458,7 @@ int main(int ac, char **av)
 			exit(write(2, "Invalide file name\n", 20));
 		init_cub(av[1], &cub);
 		parsing(&cub, &data);
-		// mlx_loop(data.mlx);
+		mlx_loop(data.mlx);
 	}
 	return (0);
 }
