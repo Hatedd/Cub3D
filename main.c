@@ -29,7 +29,7 @@ int	ft_myatoi(const char *str)
 }
 int check_ws(char c)
 {
-	if ((c >= 9 && c <= 13) || c == 32)
+	if (c == '\t' || c == ' ')
 		return (1);
 	return (0);
 }
@@ -288,11 +288,19 @@ int player_pos(t_cub3d *cub)
 void ft_copy_map(t_cub3d *cub, int pos)
 {
 	int i;
+	int j;
 
 	i = 0;
 	while (cub->infile[pos])
 	{
+		// printf("%s\n", cub->infile[pos]);
 		cub->map[i] = ft_strdup(cub->infile[pos]);
+		j = 0;
+		// while (check_ws(cub->map[i][j]) || cub->)
+		// {
+		// 	if (cub->map[i][j])
+		// }
+		j++;
 		i++;
 		pos++;
 	}
@@ -424,6 +432,47 @@ void    parsing(t_cub3d *cub, t_data *data)
 	else
 		exit(write(2, "Error missing data\n", 20));
 }
+
+int lastlen(char *str)
+{
+	int i;
+	
+	i = ft_strlen(str);
+	while (str[i] != '1' && i > 0)
+		i--;
+	return (i);
+}
+
+void check_str(char *str)
+{
+	int i;
+	int len;
+	int check;
+
+	i = 0;
+	len = lastlen(str);
+	check = 0;
+	while (str[i])
+	{
+		if (str[i] == 'N' || str[i] == 'S' || str[i] == 'W' || str[i] == 'E'\
+			|| str[i] == 'F' ||  str[i] == 'C')
+			check++;
+				printf("shit%d\n", check);
+		if (check > 6 && str[i] == '1')
+		{
+			while (i < len)
+			{
+				if (str[i] == '\n' && str[i + 1] == '\n')
+					exit(write(2, "Erorr empty line in map\n", 25));
+				i++;
+			}
+			if (str[i] == '\0')
+				break;
+		}
+		i++;
+	}
+}
+
 void init_cub(char *file, t_cub3d *cub)
 {
 	int fd;
@@ -441,6 +490,7 @@ void init_cub(char *file, t_cub3d *cub)
 	cub->p_flag = 0;
 	cub->m_flag = 0;
 	str = get_next_line(fd);
+	check_str(str);
 	cub->infile = ft_split(str, '\n');
 	close (fd);
 }
