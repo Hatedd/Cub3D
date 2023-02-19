@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
+/*   Updated: 2023/02/19 20:25:33 by yobenali         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	ft_free(char **ptr)
@@ -27,19 +39,20 @@ int	ft_myatoi(const char *str)
 		exit(write(2, "Invalide rgb\n", 14));
 	return (r);
 }
-int check_ws(char c)
+
+int	check_ws(char c)
 {
 	if (c == '\t' || c == ' ')
 		return (1);
 	return (0);
 }
 
-int ft_check_rgb(char *rgb)
+int	ft_check_rgb(char *rgb)
 {
-	int i;
-	int len;
-	int ccheck;
-	char **tmp;
+	int		i;
+	int		len;
+	int		ccheck;
+	char	**tmp;
 
 	len = 2;
 	ccheck = 0;
@@ -61,10 +74,7 @@ int ft_check_rgb(char *rgb)
 			ccheck++;
 		}
 		if (!ft_isdigit(rgb[len]) && rgb[len] != ',' && rgb[len])
-		{
-			printf("shit\n");
 			exit(write(2, "Invalide rgb data\n", 19));
-		}
 		if ((ccheck != 2 || i > 2) && !rgb[len])
 			exit(write(2, "Invalide rgb data\n", 19));
 	}
@@ -81,10 +91,10 @@ int ft_check_rgb(char *rgb)
 }
 
 
-int ft_floor_ceilling(t_cub3d *cub, char *str)
+int	ft_floor_ceilling(t_cub3d *cub, char *str)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 	
 	if ((ft_strncmp(str, "F", 1) == 0 && cub->floor_rgb)
 		|| (ft_strncmp(str, "C", 1) == 0 && cub->ceilling_rgb))
@@ -106,10 +116,10 @@ int ft_floor_ceilling(t_cub3d *cub, char *str)
 	return (1);
 }
 
-int ft_texture(t_cub3d *cub, char *str)
+int	ft_texture(t_cub3d *cub, char *str)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	if ((ft_strncmp(str, "NO", 2) == 0 && cub->no_texture)
 		|| (ft_strncmp(str, "SO", 2) == 0 && cub->so_texture)
@@ -133,9 +143,9 @@ int ft_texture(t_cub3d *cub, char *str)
 	return (1);
 }
 
-int parsing_textur(t_cub3d *cub, char *str)
+int	parsing_textur(t_cub3d *cub, char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (check_ws(*str))
@@ -149,10 +159,10 @@ int parsing_textur(t_cub3d *cub, char *str)
 	return (i);
 }
 
-void ft_ending(t_cub3d *cub, int i, int j)
+void	ft_ending(t_cub3d *cub, int i, int j)
 {
-	int len;
-	int checker;
+	int	len;
+	int	checker;
 
 	len = ft_strlen(cub->map[i]);
 	while (check_ws(cub->map[i][len - 1]))
@@ -183,10 +193,10 @@ void ft_ending(t_cub3d *cub, int i, int j)
 	}
 }
 
-void ft_beginning(t_cub3d *cub, int i, int j)
+void	ft_beginning(t_cub3d *cub, int i, int j)
 {
-	int len;
-	int checker;
+	int	len;
+	int	checker;
 
 	len = ft_strlen(cub->map[i]);
 	while (check_ws(cub->map[i][len - 1]))
@@ -217,10 +227,11 @@ void ft_beginning(t_cub3d *cub, int i, int j)
 	}
 }
 
-void ft_mid(t_cub3d *cub, int i, int j)
+void	ft_mid(t_cub3d *cub, int i, int j)
 {
-	int len;
-	char c;
+	int		len;
+	char	c;
+	
 	len = ft_strlen(cub->map[i]);
 	while (check_ws(cub->map[i][len - 1]))
 		len--;
@@ -242,10 +253,10 @@ void ft_mid(t_cub3d *cub, int i, int j)
 	}
 }
 
-void ft_chflood(t_cub3d *cub)
+void	ft_chflood(t_cub3d *cub)
 {
 	int	i;
-	int j;
+	int	j;
 
 	i = 0;
 	cub->m_flag = 1;
@@ -262,9 +273,9 @@ void ft_chflood(t_cub3d *cub)
 	}
 }
 
-int player_pos(t_cub3d *cub)
+int	player_pos(t_cub3d *cub)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < cub->map_len)
@@ -288,19 +299,10 @@ int player_pos(t_cub3d *cub)
 void ft_copy_map(t_cub3d *cub, int pos)
 {
 	int i;
-	int j;
-
 	i = 0;
 	while (cub->infile[pos])
 	{
-		// printf("%s\n", cub->infile[pos]);
 		cub->map[i] = ft_strdup(cub->infile[pos]);
-		j = 0;
-		// while (check_ws(cub->map[i][j]) || cub->)
-		// {
-		// 	if (cub->map[i][j])
-		// }
-		j++;
 		i++;
 		pos++;
 	}
@@ -457,7 +459,6 @@ void check_str(char *str)
 		if (str[i] == 'N' || str[i] == 'S' || str[i] == 'W' || str[i] == 'E'\
 			|| str[i] == 'F' ||  str[i] == 'C')
 			check++;
-				printf("shit%d\n", check);
 		if (check > 6 && str[i] == '1')
 		{
 			while (i < len)
