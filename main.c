@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/19 20:25:33 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/02/19 21:15:17 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,18 +210,28 @@ void	ft_beginning(t_cub3d *cub, int i, int j)
 		{
 			if (cub->m_flag)
 				if (cub->map[i + checker][j - 1] != '1')
+				{
+					printf("%c\n", cub->map[i + checker][j - 1]);
+					printf("%d\n", i + checker);
 					exit(write(2, "Map walls error\n", 17));
+				}
 			checker++;
 			if (cub->map[i + checker][j] == '1')
 			{
 				if (cub->m_flag)
 					if (cub->map[i + checker][j - 1] != '1')
+					{
+						printf("%c\n", cub->map[i + checker][j - 1]);
 						exit(write(2, "Map walls error\n", 17));
+					}
 				cub->m_flag = 0;
 				break;
 			}
 			else if (cub->map[i + checker][j] != '1' && cub->map[i + checker][j] != ' ')
+			{
+				printf("%c\n", cub->map[i + checker][j - 1]);
 				exit(write(2, "Map walls error\n", 17));
+			}
 		}
 		j++;
 	}
@@ -414,15 +424,12 @@ void    parsing(t_cub3d *cub, t_data *data)
 	check = 0;
 	while (cub->infile[i])
 	{
-		if (!parsing_textur(cub, cub->infile[i]))
-		{
-			if (!(check = parsing_map(cub, i)))
-			{
-				exit(write(2, "Invalide data\n", 15));
-			}
-			if (check)
-				break;
-		}
+		if (!(parsing_textur(cub, cub->infile[i])))
+			exit(write(2, "Invalide data\n", 15));
+		if (!(check = parsing_map(cub, i)))
+			exit(write(2, "Invalide data\n", 15));
+		if (check)
+			break;
 		i++;
 	}
 	if ((cub->ceilling_rgb) && (cub->ea_texture) && (cub->floor_rgb)
