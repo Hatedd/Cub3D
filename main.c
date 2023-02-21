@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/21 20:53:05 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/02/21 23:44:35 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,11 @@ void	ft_ending(t_cub3d *cub, int i, int j)
 
 	len = ft_strlen(cub->map[i]);
 	while (check_ws(cub->map[i][len - 1]))
+	{
 		len--;
+		if (len == 0)
+			break;
+	}
 	while (check_ws(cub->map[i][j]))
 		j++;
 	while (j < len)
@@ -233,12 +237,13 @@ void	ft_mid(t_cub3d *cub, int i, int j)
 	char	c;
 	
 	len = ft_strlen(cub->map[i]);
-	while (check_ws(cub->map[i][len - 1]) && len >= 0)
+	while (len > 0 && check_ws(cub->map[i][len - 1]) )
 	{
-		printf("%d\n", len);
 		len--;
+		if (len == 0)
+			break;
 	}
-	while (check_ws(cub->map[i][j]))
+	while (check_ws(cub->map[i][j]) && cub->map[i][j])
 		j++;
 	while (j < len)
 	{
@@ -348,12 +353,14 @@ void    ft_midline(char *str)
 	line_len = ft_strlen(str);
 	while(check_ws(str[i]))
 		i++;
+	if (str[i] == '\0')
+		return ;
 	if (str[i] != '1' || str[line_len - 1] != '1')
 	{
 		while (check_ws(str[line_len - 1]))
 			line_len--;
 		if (str[line_len - 1] != '1' || str[i] != '1')
-			exit(write(2, "Invalide map :(\n", 17));
+			exit(write(2, "shit Invalide map :(\n", 17));
 	}
 	while(str[i])
 	{
@@ -383,8 +390,6 @@ int parsing_map(t_cub3d *cub, int pos)
 	{
 		if (i == 0 || i == last)
 			ft_updown(cub->map[i]);
-		// else if (i == last)
-		// 	return (1);
 		else
 			ft_midline(cub->map[i]);
 		i++;
@@ -436,6 +441,8 @@ int lastlen(char *str)
 	
 	i = ft_strlen(str);
 	i--;
+	if (str[i] == '\n' && str[i - 1] == '\n')
+		exit(write(2, "Erorr empty line in map\n", 25));
 	while (check_ws(str[i]))
 		i--;
 	while (str[i] != '1' && i > 0)
