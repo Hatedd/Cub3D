@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/20 22:25:47 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/02/21 20:53:05 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,8 +233,11 @@ void	ft_mid(t_cub3d *cub, int i, int j)
 	char	c;
 	
 	len = ft_strlen(cub->map[i]);
-	while (check_ws(cub->map[i][len - 1]))
+	while (check_ws(cub->map[i][len - 1]) && len >= 0)
+	{
+		printf("%d\n", len);
 		len--;
+	}
 	while (check_ws(cub->map[i][j]))
 		j++;
 	while (j < len)
@@ -432,8 +435,17 @@ int lastlen(char *str)
 	int i;
 	
 	i = ft_strlen(str);
-	while (str[i] != '1' && i > 0)
+	i--;
+	while (check_ws(str[i]))
 		i--;
+	while (str[i] != '1' && i > 0)
+	{
+		i--;
+		if (str[i] != '1' && str[i] != '\n' && str[i] != ' ')
+			exit(write(2, "Invalide map\n", 14));
+		else if (str[i] == '\n' && str[i - 1] == '\n' && i > 0)
+			exit(write(2, "Invalide map\n", 14));
+	}
 	return (i);
 }
 
