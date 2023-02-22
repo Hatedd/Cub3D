@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/21 23:44:35 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/02/22 20:35:27 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,6 +307,7 @@ int	player_pos(t_cub3d *cub)
 void ft_copy_map(t_cub3d *cub, int pos)
 {
 	int i;
+
 	i = 0;
 	while (cub->infile[pos])
 	{
@@ -314,6 +315,7 @@ void ft_copy_map(t_cub3d *cub, int pos)
 		i++;
 		pos++;
 	}
+	cub->map[i] = 0;
 	if (player_pos(cub))
 		exit(write(2, "Invalide map\n", 14));
 }
@@ -379,10 +381,11 @@ int parsing_map(t_cub3d *cub, int pos)
 
 	i = 0;
 	cub->map_len = mat_len(cub, pos);
+	// printf("map len %d\n", cub->map_len);
 	last = cub->map_len - 1;
 	if (!last)
 		exit(write(2, "map not found\n", 15));
-	cub->map = malloc(sizeof(char *) * cub->map_len + 1);
+	cub->map = malloc(sizeof(char *) * (cub->map_len + 1));
 	if (!cub->map)
 	    return (0);
 	ft_copy_map(cub, pos);
@@ -512,7 +515,9 @@ int main(int ac, char **av)
 	t_cub3d	cub;
 	t_data data;
 	int		len;
+	int		i;
 
+	i = 0;
 	if (ac == 2)
 	{
 		len = ft_strlen(av[1]) - 4;
@@ -520,6 +525,11 @@ int main(int ac, char **av)
 			exit(write(2, "Invalide file name\n", 20));
 		init_cub(av[1], &cub);
 		parsing(&cub, &data);
+		while (cub.map[i])
+		{
+			printf("%s\n", cub.map[i]);
+			i++;
+		}
 		mlx_loop(data.mlx);
 	}
 	return (0);
