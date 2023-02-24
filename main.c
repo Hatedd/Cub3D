@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/22 20:35:27 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/02/25 00:26:13 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	ft_check_rgb(char *rgb)
 		}
 		if (!ft_isdigit(rgb[len]) && rgb[len] != ',' && rgb[len])
 			exit(write(2, "Invalide rgb data\n", 19));
-		if ((ccheck != 2 || i > 2) && !rgb[len])
+		if ((ccheck != 2 || i > 2) && !rgb[len - 1])
 			exit(write(2, "Invalide rgb data\n", 19));
 	}
 	i = 0;
@@ -423,7 +423,7 @@ void    parsing(t_cub3d *cub, t_data *data)
 	i = 0;
 	while (cub->infile[i])
 	{
-		if (!(parsing_textur(cub, cub->infile[i])))
+		if (!(parsing_textur(cub, cub->infile[i])) && !cub->valide)
 			exit(write(2, "Invalide data\n", 15));
 		if ((cub->ceilling_rgb) && (cub->ea_texture) && (cub->floor_rgb)
 			&& (cub->no_texture) && (cub->so_texture) && (cub->we_texture))
@@ -443,15 +443,17 @@ int lastlen(char *str)
 	int i;
 	
 	i = ft_strlen(str);
+	if (i == 0)
+		exit(write(2, "Empty file\n", 12));
 	i--;
-	if (str[i] == '\n' && str[i - 1] == '\n')
+	if (str[i] == '\n' && str[i - 1] == '\n' && i > 0)
 		exit(write(2, "Erorr empty line in map\n", 25));
-	while (check_ws(str[i]))
+	while (check_ws(str[i]) && i > 0)
 		i--;
 	while (str[i] != '1' && i > 0)
 	{
 		i--;
-		if (str[i] != '1' && str[i] != '\n' && str[i] != ' ')
+		if (str[i] != '1' && str[i] != '\n' && str[i] != ' ' && i > 0)
 			exit(write(2, "Invalide map\n", 14));
 		else if (str[i] == '\n' && str[i - 1] == '\n' && i > 0)
 			exit(write(2, "Invalide map\n", 14));
@@ -459,7 +461,20 @@ int lastlen(char *str)
 	return (i);
 }
 
-void check_str(char *str)
+void check_empty(char *str, t_cub3d *cub)
+{
+	int i;
+
+	i = 0;
+	while (check_ws(str[i]))
+		i++;
+	if (str[i] == '\0')
+		exit(write(2, "Empty file\n", 12));
+	else
+		cub->valide = 1;
+}
+
+void check_str(char *str, t_cub3d *cub)
 {
 	int i;
 	int len;
@@ -468,6 +483,7 @@ void check_str(char *str)
 	i = 0;
 	len = lastlen(str);
 	check = 0;
+	check_empty(str, cub);
 	while (str[i])
 	{
 		if (str[i] == 'N' || str[i] == 'S' || str[i] == 'W' || str[i] == 'E'\
@@ -504,8 +520,9 @@ void init_cub(char *file, t_cub3d *cub)
 	cub->ceilling_rgb = NULL;
 	cub->p_flag = 0;
 	cub->m_flag = 0;
+	cub->valide = 0;
 	str = get_next_line(fd);
-	check_str(str);
+	check_str(str, cub);
 	cub->infile = ft_split(str, '\n');
 	close (fd);
 }
