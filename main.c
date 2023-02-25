@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/25 20:06:55 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/02/25 22:02:39 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	ft_rgb_help(char *rgb, int len)
 		}
 		if (!ft_isdigit(rgb[len]) && rgb[len] != ',' && rgb[len])
 			exit(write(2, "Invalide rgb data\n", 19));
-			printf("%d\n", ccheck);
 		if ((ccheck != 2 || i > 3) && !rgb[len])
 		{
 			exit(write(2, "Invalide rgb data\n", 19));
@@ -83,10 +82,11 @@ int	ft_check_rgb(char *rgb)
 	int		len;
 	char	**tmp;
 
-	len = 2;
+	len = 1;
+	printf("%s\n", rgb + len);
 	while (check_ws(rgb[len]))
 		len++;
-	tmp = ft_split(rgb + len - 1, ',');
+	tmp = ft_split(rgb + len, ',');
 	ft_rgb_help(rgb, len);
 	i = 0;
 	while (tmp[i] != NULL)
@@ -109,23 +109,30 @@ int	ft_floor_ceilling(t_cub3d *cub, char *str)
 		|| (ft_strncmp(str, "C", 1) == 0 && cub->ceilling_rgb))
 		return (0);
 	i = 1;
-	while (check_ws(*str + i))
+	while (check_ws(str[i]))
 		i++;
 	j = i;
-	while (ft_isprint(*str + j))
+	while (ft_isprint(str[j]))
 		j++;
-	if (ft_strncmp(str, "F", 1) == 0)
+	if (ft_strncmp(str, "F", 1) == 0 || ft_strncmp(str, "C", 1) == 0)
 	{
-		cub->floor_rgb = ft_substr(str, i, j);
-		printf("%s\n", cub->floor_rgb);
+		if (ft_strncmp(str, "F", 1) == 0)
+		{
+			printf("shit this is F\n");
+			cub->floor_rgb = ft_substr(str, i, j);
+		}
+		else if (ft_strncmp(str, "C", 1) == 0)
+		{
+			printf("shit this is C %s\n", str);
+			cub->ceilling_rgb = ft_substr(str, i, j);
+			printf("shit this is C %s\n", cub->ceilling_rgb);
+		}
 	}
-	else if (ft_strncmp(str, "C", 1) == 0)
-		cub->ceilling_rgb = ft_substr(str, i, j);
+	if (cub->floor_rgb)
+		i = ft_check_rgb(cub->floor_rgb);
 	if (cub->ceilling_rgb)
-		return (ft_check_rgb(cub->ceilling_rgb));
-	else if (cub->floor_rgb)
-		return (ft_check_rgb(cub->floor_rgb));
-	return (1);
+		i = ft_check_rgb(cub->ceilling_rgb);
+	return (i);
 }
 
 int	ft_texture(t_cub3d *cub, char *str)
@@ -168,10 +175,7 @@ int	parsing_textur(t_cub3d *cub, char *str)
 		i = ft_texture(cub, str);
 	}
 	else if (!ft_strncmp(str, "F", 1) || !ft_strncmp(str, "C", 1))
-	{
-		printf("%s\n", str);
 		i = ft_floor_ceilling(cub, str);
-	}
 	return (i);
 }
 
@@ -505,7 +509,7 @@ void	check_str(char *str, t_cub3d *cub)
 		if (str[i] == 'N' || str[i] == 'S' || str[i] == 'W' || str[i] == 'E'\
 			|| str[i] == 'F' || str[i] == 'C')
 			check++;
-		if (check > 6 && str[i] == '1')
+		if (check > 7 && str[i] == '1')
 		{
 			i = check_str2(str, i, len);
 			if (str[i] == '\0')
