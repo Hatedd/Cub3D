@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/25 22:02:39 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/02/26 00:06:28 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ int	ft_check_rgb(char *rgb)
 	char	**tmp;
 
 	len = 1;
-	printf("%s\n", rgb + len);
 	while (check_ws(rgb[len]))
 		len++;
 	tmp = ft_split(rgb + len, ',');
@@ -117,16 +116,9 @@ int	ft_floor_ceilling(t_cub3d *cub, char *str)
 	if (ft_strncmp(str, "F", 1) == 0 || ft_strncmp(str, "C", 1) == 0)
 	{
 		if (ft_strncmp(str, "F", 1) == 0)
-		{
-			printf("shit this is F\n");
 			cub->floor_rgb = ft_substr(str, i, j);
-		}
 		else if (ft_strncmp(str, "C", 1) == 0)
-		{
-			printf("shit this is C %s\n", str);
 			cub->ceilling_rgb = ft_substr(str, i, j);
-			printf("shit this is C %s\n", cub->ceilling_rgb);
-		}
 	}
 	if (cub->floor_rgb)
 		i = ft_check_rgb(cub->floor_rgb);
@@ -248,9 +240,12 @@ void	ft_mid(t_cub3d *cub, int i, size_t j)
 	char	c;
 
 	len = ft_strlen(cub->map[i]);
-	while (len-- > 0 && check_ws(cub->map[i][len - 1]))
+	while (len > 0 && check_ws(cub->map[i][len - 1]))
+	{
+		len--;	
 		if (len == 0)
 			break ;
+	}
 	while (check_ws(cub->map[i][j]) && cub->map[i][j])
 		j++;
 	while (j < len)
