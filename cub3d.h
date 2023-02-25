@@ -9,10 +9,10 @@
 
 typedef struct cub3d
 {
-    char *no_texture;
-    char *so_texture;
-    char *we_texture;
-    char *ea_texture;
+    char *no_t;
+    char *so_t;
+    char *we_t;
+    char *ea_t;
     char *floor_rgb;
     char *ceilling_rgb;
     char **infile;
