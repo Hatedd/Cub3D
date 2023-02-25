@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/25 00:26:13 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/02/25 18:53:07 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	ft_check_rgb(char *rgb)
 	ccheck = 0;
 	while (check_ws(rgb[len]))
 		len++;
-	tmp = ft_split(rgb + len, ',');
+	tmp = ft_split(rgb + len - 1, ',');
 	while (rgb[len])
 	{
 		i = 0;
@@ -75,7 +75,7 @@ int	ft_check_rgb(char *rgb)
 		}
 		if (!ft_isdigit(rgb[len]) && rgb[len] != ',' && rgb[len])
 			exit(write(2, "Invalide rgb data\n", 19));
-		if ((ccheck != 2 || i > 2) && !rgb[len - 1])
+		if ((ccheck != 2 || i > 3) && !rgb[len])
 			exit(write(2, "Invalide rgb data\n", 19));
 	}
 	i = 0;
@@ -95,7 +95,7 @@ int	ft_floor_ceilling(t_cub3d *cub, char *str)
 {
 	int	i;
 	int	j;
-	
+
 	if ((ft_strncmp(str, "F", 1) == 0 && cub->floor_rgb)
 		|| (ft_strncmp(str, "C", 1) == 0 && cub->ceilling_rgb))
 		return (0);
@@ -159,9 +159,9 @@ int	parsing_textur(t_cub3d *cub, char *str)
 	return (i);
 }
 
-void	ft_ending(t_cub3d *cub, int i, int j)
+void	ft_ending(t_cub3d *cub, int i, size_t j)
 {
-	int	len;
+	size_t	len;
 	int	checker;
 
 	len = ft_strlen(cub->map[i]);
@@ -197,9 +197,9 @@ void	ft_ending(t_cub3d *cub, int i, int j)
 	}
 }
 
-void	ft_beginning(t_cub3d *cub, int i, int j)
+void	ft_beginning(t_cub3d *cub, int i, size_t j)
 {
-	int	len;
+	size_t	len;
 	int	checker;
 
 	len = ft_strlen(cub->map[i]);
@@ -231,9 +231,9 @@ void	ft_beginning(t_cub3d *cub, int i, int j)
 	}
 }
 
-void	ft_mid(t_cub3d *cub, int i, int j)
+void	ft_mid(t_cub3d *cub, int i, size_t j)
 {
-	int		len;
+	size_t	len;
 	char	c;
 	
 	len = ft_strlen(cub->map[i]);
@@ -248,10 +248,10 @@ void	ft_mid(t_cub3d *cub, int i, int j)
 	while (j < len)
 	{
 		c = cub->map[i][j];
-		if (c == '0' || c == 'E' || c == 'W' || c == 'S' || c == 'N')
+		if ((c == '0' || c == 'E' || c == 'W' || c == 'S' || c == 'N') && i > 0)
 		{
-			if ((size_t)j > ft_strlen(cub->map[i - 1]) || (size_t)j > ft_strlen(cub->map[i + 1]))
-				exit(write(2, "Invalide map\n", 19));
+			if ((j >= ft_strlen(cub->map[i - 1]) || j >= ft_strlen(cub->map[i + 1])) && cub->map[i + 1])
+				exit(write(2, "Invalide map\n", 14));
 			if ((cub->map[i - 1][j] == ' ' || cub->map[i + 1][j] == ' ' || \
 				cub->map[i][j - 1] == ' ' || cub->map[i][j + 1] == ' ') && \
 				cub->map[i][j + 1])
@@ -264,7 +264,7 @@ void	ft_mid(t_cub3d *cub, int i, int j)
 void	ft_chflood(t_cub3d *cub)
 {
 	int	i;
-	int	j;
+	size_t	j;
 
 	i = 0;
 	cub->m_flag = 1;
@@ -381,7 +381,6 @@ int parsing_map(t_cub3d *cub, int pos)
 
 	i = 0;
 	cub->map_len = mat_len(cub, pos);
-	// printf("map len %d\n", cub->map_len);
 	last = cub->map_len - 1;
 	if (!last)
 		exit(write(2, "map not found\n", 15));
@@ -413,7 +412,7 @@ void	ft_init_data(t_cub3d *cub, t_data *data)
 	data->t_we = mlx_xpm_file_to_image(data->mlx, cub->we_texture, &data->img_w, &data->img_h);
 	data->t_so = mlx_xpm_file_to_image(data->mlx, cub->so_texture, &data->img_w, &data->img_h);
 	if (!data->t_ea || !data->t_no || !data->t_so || !data->t_we)
-		exit(write(2, "Invalide textur\n", 17));
+		exit(write(2, "Invalide texture\n", 18));
 }
 
 void    parsing(t_cub3d *cub, t_data *data)
@@ -421,9 +420,11 @@ void    parsing(t_cub3d *cub, t_data *data)
 	int i;
 
 	i = 0;
+	while (check_ws(*cub->infile[i]) || *cub->infile[i] == '\n')
+		i++;
 	while (cub->infile[i])
 	{
-		if (!(parsing_textur(cub, cub->infile[i])) && !cub->valide)
+		if (!(parsing_textur(cub, cub->infile[i])))
 			exit(write(2, "Invalide data\n", 15));
 		if ((cub->ceilling_rgb) && (cub->ea_texture) && (cub->floor_rgb)
 			&& (cub->no_texture) && (cub->so_texture) && (cub->we_texture))
