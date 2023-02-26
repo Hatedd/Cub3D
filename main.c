@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/26 00:06:28 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/02/26 19:49:36 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	ft_myatoi(const char *str)
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		r = r * 10 + str[i] - 48;
+		if (r > 2147483647)
+			exit(write(2, "Invalide rgb\n", 14));
 		i++;
 	}
 	if (str[i] == '-' || str[i] != '\0')
@@ -69,7 +71,7 @@ void	ft_rgb_help(char *rgb, int len)
 		}
 		if (!ft_isdigit(rgb[len]) && rgb[len] != ',' && rgb[len])
 			exit(write(2, "Invalide rgb data\n", 19));
-		if ((ccheck != 2 || i > 3) && !rgb[len])
+		if ((ccheck != 2) && !rgb[len])
 		{
 			exit(write(2, "Invalide rgb data\n", 19));
 		}
@@ -85,18 +87,20 @@ int	ft_check_rgb(char *rgb)
 	len = 1;
 	while (check_ws(rgb[len]))
 		len++;
-	tmp = ft_split(rgb + len, ',');
+	tmp = ft_split(rgb + len - 1, ',');
 	ft_rgb_help(rgb, len);
 	i = 0;
 	while (tmp[i] != NULL)
 	{
 		len = ft_myatoi(tmp[i]);
+		printf("%d\n", len);
 		if (len > 255)
 			return (0);
 		i++;
 	}
 	ft_free(tmp);
-	return (1);
+	//btw firgule 
+	return (i);
 }
 
 int	ft_floor_ceilling(t_cub3d *cub, char *str)
@@ -115,15 +119,15 @@ int	ft_floor_ceilling(t_cub3d *cub, char *str)
 		j++;
 	if (ft_strncmp(str, "F", 1) == 0 || ft_strncmp(str, "C", 1) == 0)
 	{
+		if (!ft_isdigit(str[i]))
+			exit(write(2, "Invalide rgb\n", 14));
 		if (ft_strncmp(str, "F", 1) == 0)
 			cub->floor_rgb = ft_substr(str, i, j);
 		else if (ft_strncmp(str, "C", 1) == 0)
 			cub->ceilling_rgb = ft_substr(str, i, j);
 	}
-	if (cub->floor_rgb)
-		i = ft_check_rgb(cub->floor_rgb);
-	if (cub->ceilling_rgb)
-		i = ft_check_rgb(cub->ceilling_rgb);
+	if (cub->floor_rgb && cub->ceilling_rgb)
+		i = ft_check_rgb(cub->floor_rgb) && ft_check_rgb(cub->ceilling_rgb);
 	return (i);
 }
 
@@ -322,6 +326,7 @@ void	ft_copy_map(t_cub3d *cub, int pos)
 	cub->map[i] = 0;
 	if (player_pos(cub))
 		exit(write(2, "Invalide map\n", 14));
+	//sig in the -1 befor 
 }
 
 int	mat_len(t_cub3d *cub, int pos)
@@ -370,9 +375,7 @@ void	ft_midline(char *str)
 	{
 		if (str[i] != '0' && str[i] != '1' && str[i] != 'N' && \
 			str[i] != 'S' && str[i] != 'E' && str[i] != 'W' && str[i] != ' ')
-		{
 			exit(write(2, "Invalide map :(\n", 17));
-		}
 		i++;
 	}
 }
@@ -416,6 +419,7 @@ void	ft_init_data(t_cub3d *cub, t_data *d)
 	d->t_so = mlx_xpm_file_to_image(d->mlx, cub->so_t, &d->img_w, &d->img_h);
 	if (!d->t_ea || !d->t_no || !d->t_so || !d->t_we)
 		exit(write(2, "Invalide texture\n", 18));
+		//theres a sig here
 }
 
 void	parsing(t_cub3d *cub, t_data *d)
