@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/27 17:36:35 by youssef          ###   ########.fr       */
+/*   Updated: 2023/02/27 19:51:25 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	ft_check_rgb(char *rgb)
 		i++;
 	}
 	if (i < 3)
-		exit(write(2,"Invalide rgb data\n", 19));
+		exit(write(2, "Invalide rgb data\n", 19));
 	ft_free(tmp);
 	return (i);
 }
@@ -127,7 +127,7 @@ int	ft_floor_ceilling(t_cub3d *cub, char *str)
 			cub->ceilling_rgb = ft_substr(str, i, j);
 	}
 	if (cub->floor_rgb && cub->ceilling_rgb)
-		i = ft_check_rgb(cub->floor_rgb) && ft_check_rgb(cub->ceilling_rgb);
+		i = (ft_check_rgb(cub->floor_rgb) && ft_check_rgb(cub->ceilling_rgb));
 	return (i);
 }
 
@@ -238,6 +238,19 @@ void	ft_beginning(t_cub3d *cub, int i, size_t j)
 	}
 }
 
+void	ft_mid_help(t_cub3d *cub, int i, size_t j)
+{
+	if ((j >= ft_strlen(cub->map[i - 1]) || \
+		j >= ft_strlen(cub->map[i + 1])) && cub->map[i + 1])
+		exit(write(2, "Invalide map\n", 14));
+	if (j == 0)
+		exit(write(2, "Invalide map\n", 14));
+	if ((cub->map[i - 1][j] == ' ' || cub->map[i + 1][j] == ' ' || \
+		cub->map[i][j - 1] == ' ' || cub->map[i][j + 1] == ' ') && \
+		cub->map[i][j + 1])
+		exit(write(2, "Invalide map\n", 14));
+}
+
 void	ft_mid(t_cub3d *cub, int i, size_t j)
 {
 	size_t	len;
@@ -246,7 +259,7 @@ void	ft_mid(t_cub3d *cub, int i, size_t j)
 	len = ft_strlen(cub->map[i]);
 	while (len > 0 && check_ws(cub->map[i][len - 1]))
 	{
-		len--;	
+		len--;
 		if (len == 0)
 			break ;
 	}
@@ -256,17 +269,7 @@ void	ft_mid(t_cub3d *cub, int i, size_t j)
 	{
 		c = cub->map[i][j];
 		if ((c == '0' || c == 'E' || c == 'W' || c == 'S' || c == 'N') && i > 0)
-		{
-			if ((j >= ft_strlen(cub->map[i - 1]) || \
-				j >= ft_strlen(cub->map[i + 1])) && cub->map[i + 1])
-				exit(write(2, "Invalide map\n", 14));
-			if (j == 0)
-				exit(write(2, "Invalide map\n", 14));
-			if ((cub->map[i - 1][j] == ' ' || cub->map[i + 1][j] == ' ' || \
-				cub->map[i][j - 1] == ' ' || cub->map[i][j + 1] == ' ') && \
-				cub->map[i][j + 1])
-				exit(write(2, "Invalide map\n", 14));
-		}
+			ft_mid_help(cub, i, j);
 		j++;
 	}
 }
@@ -300,11 +303,11 @@ int	player_pos(t_cub3d *cub)
 	{
 		if (ft_strchr(cub->map[i], 'E'))
 			cub->p_flag++;
-		else if (ft_strchr(cub->map[i], 'S'))
+		if (ft_strchr(cub->map[i], 'S'))
 			cub->p_flag++;
-		else if (ft_strchr(cub->map[i], 'N'))
+		if (ft_strchr(cub->map[i], 'N'))
 			cub->p_flag++;
-		else if (ft_strchr(cub->map[i], 'W'))
+		if (ft_strchr(cub->map[i], 'W'))
 			cub->p_flag++;
 		i++;
 	}
@@ -420,7 +423,6 @@ void	ft_init_data(t_cub3d *cub, t_data *d)
 	d->t_so = mlx_xpm_file_to_image(d->mlx, cub->so_t, &d->img_w, &d->img_h);
 	if (!d->t_ea || !d->t_no || !d->t_so || !d->t_we)
 		exit(write(2, "Invalide texture\n", 18));
-		//theres a sig here
 }
 
 void	parsing(t_cub3d *cub, t_data *d)
@@ -437,7 +439,6 @@ void	parsing(t_cub3d *cub, t_data *d)
 		if ((cub->ceilling_rgb) && (cub->ea_t) && (cub->floor_rgb)
 			&& (cub->no_t) && (cub->so_t) && (cub->we_t))
 		{	
-			ft_init_data(cub, d);
 			i++;
 			break ;
 		}
@@ -445,6 +446,7 @@ void	parsing(t_cub3d *cub, t_data *d)
 	}
 	if (!parsing_map(cub, i))
 		exit(write(2, "Invalide data\n", 15));
+	ft_init_data(cub, d);
 }
 
 int	lastlen(char *str)
