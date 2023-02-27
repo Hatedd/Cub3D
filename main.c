@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 20:21:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/02/26 19:49:36 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/02/27 17:36:35 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,13 +93,13 @@ int	ft_check_rgb(char *rgb)
 	while (tmp[i] != NULL)
 	{
 		len = ft_myatoi(tmp[i]);
-		printf("%d\n", len);
 		if (len > 255)
 			return (0);
 		i++;
 	}
+	if (i < 3)
+		exit(write(2,"Invalide rgb data\n", 19));
 	ft_free(tmp);
-	//btw firgule 
 	return (i);
 }
 
@@ -260,6 +260,8 @@ void	ft_mid(t_cub3d *cub, int i, size_t j)
 			if ((j >= ft_strlen(cub->map[i - 1]) || \
 				j >= ft_strlen(cub->map[i + 1])) && cub->map[i + 1])
 				exit(write(2, "Invalide map\n", 14));
+			if (j == 0)
+				exit(write(2, "Invalide map\n", 14));
 			if ((cub->map[i - 1][j] == ' ' || cub->map[i + 1][j] == ' ' || \
 				cub->map[i][j - 1] == ' ' || cub->map[i][j + 1] == ' ') && \
 				cub->map[i][j + 1])
@@ -326,7 +328,6 @@ void	ft_copy_map(t_cub3d *cub, int pos)
 	cub->map[i] = 0;
 	if (player_pos(cub))
 		exit(write(2, "Invalide map\n", 14));
-	//sig in the -1 befor 
 }
 
 int	mat_len(t_cub3d *cub, int pos)
