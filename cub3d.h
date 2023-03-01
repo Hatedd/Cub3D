@@ -33,10 +33,18 @@ typedef struct data
     void    *t_ea;
     int  img_h;
     int  img_w;
-    int  map_h;
-    int  map_w;
-}   t_data;
+	int  map_h;
+	int  map_w;
+}	t_data;
 
-
+void	parsing(t_cub3d *cub, t_data *d);
+void	init_cub(char *file, t_cub3d *cub);
+void	ft_mid_help(t_cub3d *cub, int i, size_t j);
+void	ft_walls_check(t_cub3d *cub, int i, int j, int flag);
+int		check_ws(char c);
+int		ft_check_rgb(char *rgb);
+int		player_pos(t_cub3d *cub);
+int		parsing_map(t_cub3d *cub, int pos);
+int		parsing_textur(t_cub3d *cub, char *str);
 
 #endif

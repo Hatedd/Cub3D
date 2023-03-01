@@ -1,6 +1,11 @@
 NAME = Cub3D
 
 SRCS =  main.c \
+	parsing.c \
+	parsing2.c \
+	map_utils.c \
+	init_data.c \
+	parsing_map.c \
 	gnl/get_next_line.c \
 	gnl/get_next_line_utils.c \
 	minilibx_opengl_20191021/libmlx.a\
