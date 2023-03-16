@@ -419,6 +419,15 @@ void ft_init_img(t_img *img)
 	img->end = 0;
 	img->size = 0;
 }
+
+// void	ft_init_textures(t_cub3d *cub)
+// {
+// 	cub->textures[0] = *cub->no_t;
+// 	cub->textures[1] = *cub->ea_t;
+// 	cub->textures[2] = *cub->so_t;
+// 	cub->textures[3] = *cub->we_t;
+// 	cub->textures[4] = 0;
+// }
 void	ft_init_data(t_cub3d *cub, t_data *d, t_img *img)
 {
 	d->flag = 0;	
@@ -432,6 +441,7 @@ void	ft_init_data(t_cub3d *cub, t_data *d, t_img *img)
 	d->player = malloc(sizeof(t_player));
 	// d->rays = malloc(sizeof(t_rays) * NUM_RAYS );
 	d->cub = cub;
+	// ft_init_textures(cub);
 	// d->img = mlx_new_image(d->mlx, WIN_WIDHT,WIN_HIGHT);
 	// d->address = mlx_get_data_addr(d->img,&d->bits_per_pixel, &d->line_len, &d->endian);
 	// d->win = mlx_new_window(d->mlx, WIN_WIDHT, WIN_HIGHT, "Cub3Dii");

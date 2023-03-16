@@ -80,8 +80,9 @@ void ft_render3d(t_data *data, int ray_index)
 	double distance_projection_plane;
 	double projected_wall_height;
 	int pixel_index_y;
-    int x;
-    int y;
+    int distanceFtop;
+    int textureOffsetx;
+    int textureOffsety;
 
 	// Calculate the perpendicular distance from the player's position to the wall hit by the ray
 	perpendicular_hit_distance = data->rays[ray_index].hit_dist * cos(data->rays[ray_index].angle - data->player->rotationangle);
@@ -103,21 +104,27 @@ void ft_render3d(t_data *data, int ray_index)
 
 	// Loop through the pixels on the screen that correspond to the wall and draw them
 	pixel_index_y = wall_top_pixel;
+    if (data->rays[ray_index].hit_vertical)
+        textureOffsetx = (int)data->rays[ray_index].wallhit_y % TILE;
+    else
+        textureOffsetx = (int)data->rays[ray_index].wallhit_x % TILE;
 	while(pixel_index_y < wall_bottom_pixel)
 	{
-		// my_mlx_p_put(data, ray_index, pixel_index_y, *(int*)(data->address + pixel_index_y * TILE * 4 + ray_index * 4)); // Draw a blue pixel at the current (ray, pixel) position
+        distanceFtop = pixel_index_y + (wall_strip_height / 2) - (WIN_HIGHT / 2);
+        textureOffsety = distanceFtop * ((float)TILE/wall_strip_height);
+		my_mlx_p_put(data, ray_index, pixel_index_y, *(int*)(data->address + textureOffsety)); // Draw a blue pixel at the current (ray, pixel) position
 		pixel_index_y++;
 	}
-    int size = 512;
-    for (size_t i = 0; i < size; i++)
-	{
-		for (size_t j = 0; j < size; j++)
-		{
-            unsigned int offset = (int)(i/(((float)size/TILE))) * TILE * 4 + (int)(j/(((float)size/TILE))) * 4;
-            unsigned int color = *(unsigned int*)(data->address + offset);
-			my_mlx_p_put(data, j, i, color);
-		}
-	}
+    // int size = 512;
+    // for (size_t i = 0; i < size; i++)
+	// {
+	// 	for (size_t j = 0; j < size; j++)
+	// 	{
+    //         // unsigned int offset = (int)(i/(((float)size/TILE))) * TILE * 4 + (int)(j/(((float)size/TILE))) * 4;
+    //         // unsigned int color = *(unsigned int*)(data->address + offset);
+	// 		my_mlx_p_put(data, j, i, color);
+	// 	}
+	// }
 }
 
 void render_map(t_data *data)

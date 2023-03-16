@@ -40,6 +40,7 @@ typedef struct cub3d
     char *ceilling_rgb;
     char **infile;
     char **map;
+    char *textures;
     int map_whitd;
     int map_hight;
     int  p_flag;
