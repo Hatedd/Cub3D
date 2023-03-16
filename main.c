@@ -654,15 +654,13 @@ void render_floor_roof(t_data *data)
 }
 
 void creat_win(t_data *data, t_img *img)
-{
-	void *img_add;
-	
+{	
 	data->mlx = mlx_init();
   	data->win = mlx_new_window(data->mlx, WIN_WIDHT, WIN_HIGHT, "Cub3Dii");
     img->img = mlx_new_image(data->mlx, WIN_WIDHT, WIN_HIGHT);
 	img->addr = mlx_get_data_addr(data->img->img, &img->bit_pp, &img->size, &img->end);
-	img_add = mlx_xpm_file_to_image(data->mlx, data->cub->no_t, &data->img_w, &data->img_h);
-	data->address = mlx_get_data_addr(img_add, &data->bits_per_pixel, &data->line_len, &data->endian);	
+	data->t_no = mlx_xpm_file_to_image(data->mlx, data->cub->no_t, &data->img_w, &data->img_h);
+	data->address = mlx_get_data_addr(data->t_no, &data->bits_per_pixel, &data->line_len, &data->endian);	
 }
 int	main(int ac, char **av)
 {

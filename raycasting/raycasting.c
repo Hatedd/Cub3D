@@ -71,6 +71,14 @@ void ft_draw_square(t_data *data, int color, int x, int y, int size)
     }
 }
 
+unsigned int	my_mlx_texture(t_data *data, int x, int y)
+{
+	char	*dst;
+
+	dst = data->address + (y * data->line_len + x * (data->bits_per_pixel / 8));
+	return (*(unsigned int*)dst);
+}
+
 void ft_render3d(t_data *data, int ray_index)
 {
 	int wall_strip_height;
@@ -105,14 +113,14 @@ void ft_render3d(t_data *data, int ray_index)
 	// Loop through the pixels on the screen that correspond to the wall and draw them
 	pixel_index_y = wall_top_pixel;
     if (data->rays[ray_index].hit_vertical)
-        textureOffsetx = (int)data->rays[ray_index].wallhit_y % TILE;
+        textureOffsetx = (int)(data->rays[ray_index].wallhit_y) % TILE;
     else
-        textureOffsetx = (int)data->rays[ray_index].wallhit_x % TILE;
+        textureOffsetx = (int)(data->rays[ray_index].wallhit_x) % TILE;
 	while(pixel_index_y < wall_bottom_pixel)
 	{
         distanceFtop = pixel_index_y + (wall_strip_height / 2) - (WIN_HIGHT / 2);
         textureOffsety = distanceFtop * ((float)TILE/wall_strip_height);
-		my_mlx_p_put(data, ray_index, pixel_index_y, *(int*)(data->address + textureOffsety)); // Draw a blue pixel at the current (ray, pixel) position
+		my_mlx_p_put(data, ray_index, pixel_index_y, my_mlx_texture(data, textureOffsetx, textureOffsety)); // Draw a blue pixel at the current (ray, pixel) position
 		pixel_index_y++;
 	}
     // int size = 512;
@@ -381,6 +389,9 @@ void save_smallest_distance(t_cast_ray *casting, int i, t_data *d)
             casting->is_hitvertical = 0;
         }
     d->rays[i].hit_dist = casting->hit_dist;
+    d->rays[i].wallhit_x = casting->hit_x;
+    d->rays[i].wallhit_y = casting->hit_y;
+    d->rays[i].hit_vertical = casting->is_hitvertical;
 }
 
 void castRay( t_data *d , double ray_angle , int i)
