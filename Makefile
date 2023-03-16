@@ -1,22 +1,18 @@
 NAME = Cub3D
 
 SRCS =  main.c \
-	parsing.c \
-	parsing2.c \
-	map_utils.c \
-	init_data.c \
-	parsing_map.c \
 	gnl/get_next_line.c \
 	gnl/get_next_line_utils.c \
-	minilibx_opengl_20191021/libmlx.a\
+	raycasting/raycasting.c\
+	raycasting/player.c
 
 CC = @cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS = -g #-fsanitize=address 
 
-MLX =  -framework OpenGl -framework Appkit
+MLX =  -Imlx -lmlx -framework OpenGl -framework Appkit
 
 all : 	${NAME}
 

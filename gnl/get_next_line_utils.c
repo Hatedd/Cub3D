@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mohamedouizar <mohamedouizar@student.42    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/25 01:43:17 by yobenali          #+#    #+#             */
-/*   Updated: 2021/12/09 20:55:54 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/10 20:41:39 by mohamedouiz      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
