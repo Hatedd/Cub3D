@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 00:37:39 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/17 05:20:01 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/17 05:59:05 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,8 @@ typedef struct s_castray
 	double	deltay;
 	double	next_x_intersect;
 	double	next_y_intersect;
-	double	nextVertTouchX;
-	double	nextVertTouchY;
+	double	next_vert_touch_x;
+	double	next_vert_touch_y;
 	double	hit_dis_h;
 	double	hit_dis_ver;
 	double	hit_dist;
@@ -203,6 +203,5 @@ void	get_array_dimensions(t_cub3d *cub, int *rows, int *cols);
 void	save_smallest_distance(t_cast_ray *casting, int i, t_data *d);
 void	drawLine(t_data *d, int x1, int y1, int x2, int y2, int color);
 void	ft_draw_square(t_data *data, int color, int x, int y, int size);
-
 
 #endif

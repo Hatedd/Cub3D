@@ -31,8 +31,12 @@ int	get_wall_cordinates(double x, double y, t_data *d)
 
 void	save_smallest_distance(t_cast_ray *casting, int i, t_data *d)
 {
-	casting->hit_dis_h = (casting->found_h_wall) ? hit_dis_bp(d->player->x, d->player->y, casting->horzhit_x, casting->horzhit_y) : INT_MAX;
-	casting->hit_dis_ver = (casting->found_v_wall) ? hit_dis_bp(d->player->x, d->player->y, casting->verthit_x, casting->verthit_y) : INT_MAX;
+	casting->hit_dis_h = INT_MAX;
+	casting->hit_dis_ver = INT_MAX;
+	if (casting->found_h_wall)
+		casting->hit_dis_h = hit_dis_bp(d->player->x, d->player->y, casting->horzhit_x, casting->horzhit_y);
+	if (casting->found_v_wall)
+		casting->hit_dis_ver = hit_dis_bp(d->player->x, d->player->y, casting->verthit_x, casting->verthit_y);
 	if (casting->hit_dis_ver < casting->hit_dis_h)
 	{
 		casting->hit_x = casting->verthit_x;

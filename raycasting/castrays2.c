@@ -4,27 +4,27 @@ void	find_v_wall(t_cast_ray *casting, t_data *d)
 {
 	double	wallcontent;
 
-	while (casting->nextVertTouchX >= 0 && \
-		casting->nextVertTouchX <= WIN_WIDHT & casting->nextVertTouchY >= 0 \
-		&& casting->nextVertTouchY <= WIN_HIGHT)
+	while (casting->next_vert_touch_x >= 0 && \
+		casting->next_vert_touch_x <= WIN_WIDHT & casting->next_vert_touch_y >= 0 \
+		&& casting->next_vert_touch_y <= WIN_HIGHT)
 	{
 		if (casting->left)
-			wallcontent = get_wall_cordinates(casting->nextVertTouchX + \
-			(-1), casting->nextVertTouchY, d);
+			wallcontent = get_wall_cordinates(casting->next_vert_touch_x + \
+			(-1), casting->next_vert_touch_y, d);
 		else
-			wallcontent = get_wall_cordinates(casting->nextVertTouchX, \
-			casting->nextVertTouchY, d);
+			wallcontent = get_wall_cordinates(casting->next_vert_touch_x, \
+			casting->next_vert_touch_y, d);
 		if (wallcontent != 0)
 		{
 			casting->found_v_wall = 1;
-			casting->verthit_x = casting->nextVertTouchX;
-			casting->verthit_y = casting->nextVertTouchY;
+			casting->verthit_x = casting->next_vert_touch_x;
+			casting->verthit_y = casting->next_vert_touch_y;
 			break ;
 		}
 		else
 		{
-			casting->nextVertTouchX += casting->deltax;
-			casting->nextVertTouchY += casting->deltay;
+			casting->next_vert_touch_x += casting->deltax;
+			casting->next_vert_touch_y += casting->deltay;
 		}
 	}
 }
@@ -47,8 +47,8 @@ void	find_v_dist(t_data *d, double ray_angle, int i, t_cast_ray *casting)
 		casting->deltay *= -1;
 	else if (casting->down && casting->deltay < 0)
 		casting->deltay *= -1;
-	casting->nextVertTouchX = casting->x_intersect;
-	casting->nextVertTouchY = casting->y_intersect;
+	casting->next_vert_touch_x = casting->x_intersect;
+	casting->next_vert_touch_y = casting->y_intersect;
 	find_v_wall(casting, d);
 }
 
