@@ -71,10 +71,28 @@ void ft_draw_square(t_data *data, int color, int x, int y, int size)
     }
 }
 
+void	my_get_data_addr(t_data *data)
+{
+	if (data->rays->facing_down || data->rays->facing_up)
+	{
+		if (data->rays->facing_down)
+			data->address = mlx_get_data_addr(data->t_so, &data->bits_per_pixel, &data->line_len, &data->endian);	
+		else
+			data->address = mlx_get_data_addr(data->t_no, &data->bits_per_pixel, &data->line_len, &data->endian);	
+	}
+	if (data->rays->facing_right || data->rays->facing_left)
+	{
+		if (data->rays->facing_right)
+			data->address = mlx_get_data_addr(data->t_ea, &data->bits_per_pixel, &data->line_len, &data->endian);	
+		else
+			data->address = mlx_get_data_addr(data->t_we, &data->bits_per_pixel, &data->line_len, &data->endian);	
+	}
+}
+
 unsigned int	my_mlx_texture(t_data *data, int x, int y)
 {
 	char	*dst;
-
+	my_get_data_addr(data);
 	dst = data->address + (y * data->line_len + x * (data->bits_per_pixel / 8));
 	return (*(unsigned int*)dst);
 }
@@ -196,31 +214,6 @@ void normalize_radians(double angle)
 //             return 1;
 //     return 0 ;
 // }
-
-int	ft_map_width(char **s)
-{
-	int l;
-	int index;
-
-	index = 0;
-	l = 0;
-	while(s[index])
-	{
-		if((size_t)l < ft_strlen(s[index]))
-			l = ft_strlen(s[index]);
-		index++;
-	}
-	return (l);
-}
-int	ft_map_hight(char **s)
-{
-	int index;
-
-	index = 0;
-	while(s[index])
-		index++;
-	return (index);
-}
 
 int mapHasWallAt(double x, double y, t_data *d)
 {
@@ -398,15 +391,18 @@ void castRay( t_data *d , double ray_angle , int i)
 {
     t_cast_ray casting;
 
-         casting.down = ray_angle > 0 && ray_angle < PI;
-         casting.up = !casting.down;
-         casting.right = ray_angle < 0.5 * PI || ray_angle > 1.5 * PI;
-         casting.left = !casting.right;
+        casting.down = ray_angle > 0 && ray_angle < PI;
+        casting.up = !casting.down;
+        casting.right = ray_angle < 0.5 * PI || ray_angle > 1.5 * PI;
+        casting.left = !casting.right;
         casting.hit_x = 0;
         casting.hit_y = 0;
         casting.hit_dist = 0;
         casting.is_hitvertical = 0;
-
+		d->rays->facing_down = casting.down;
+		d->rays->facing_up = casting.up;
+		d->rays->facing_right = casting.right;
+		d->rays->facing_left = casting.left;
        find_h_dist(d, ray_angle, i,&casting);
       find_v_dist(d, ray_angle, i, &casting);
     save_smallest_distance(&casting, i,d);

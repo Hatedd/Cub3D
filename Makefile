@@ -1,16 +1,23 @@
 NAME = Cub3D
 
 SRCS =  main.c \
+	parsing/parsing.c \
+	parsing/parsing2.c \
+	parsing/parsing3.c \
+	parsing/parsing4.c \
+	parsing/parsing5.c \
+	parsing/init_parsing.c \
 	gnl/get_next_line.c \
 	gnl/get_next_line_utils.c \
 	raycasting/raycasting.c\
-	raycasting/player.c
+	raycasting/player.c \
+	raycasting/player_utils.c \
 
 CC = @cc
 
 RM = rm -f
 
-CFLAGS = -g #-fsanitize=address 
+CFLAGS = #-Wall -Wextra -Werror -g -fsanitize=address 
 
 MLX =  -Imlx -lmlx -framework OpenGl -framework Appkit
 
