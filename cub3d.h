@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 00:37:39 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/17 00:47:32 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/17 05:20:01 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,7 @@ int		ft_texture(t_cub3d *cub, char *str);
 int		ft_key_relase(int key_press, t_data *d);
 int		ft_floor_ceilling(t_cub3d *cub, char *str);
 int		mapHasWallAt(double x, double y, t_data *d);
+int		get_wall_cordinates(double x, double y, t_data *d);
 
 void	ft_freee(char **ptr);
 void	ft_updown(char *str);
@@ -184,19 +185,24 @@ void	parsing(t_cub3d *cub);
 void	img_init(t_data *data);
 void	player_init(t_data *d);
 void	move_player(t_data *d);
+void	ft_castrays(t_data *d);
 void	render_player(t_data *d);
 void	ft_chflood(t_cub3d *cub);
 void	render_map(t_data *data);
 void	img_assigne(t_data *data);
 void	ft_ray_init(t_data *data);
+void	my_get_data_addr(t_data *data);
 void	render_floor_roof(t_data *data);
 void	init_cub(char *file, t_cub3d *cub);
 void	creat_win(t_data *data, t_img *img);
+void	cast_ray(t_data *d, double ray_angle, int i);
 void	ft_init_data(t_cub3d *cub, t_data *d, t_img *img);
 void	my_mlx_p_put(t_data *data, int x, int y, int color);
 void	ft_walls_check(t_cub3d *cub, int i, int j, int flag);
 void	get_array_dimensions(t_cub3d *cub, int *rows, int *cols);
+void	save_smallest_distance(t_cast_ray *casting, int i, t_data *d);
 void	drawLine(t_data *d, int x1, int y1, int x2, int y2, int color);
 void	ft_draw_square(t_data *data, int color, int x, int y, int size);
+
 
 #endif

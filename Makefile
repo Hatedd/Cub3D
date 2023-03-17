@@ -10,7 +10,11 @@ SRCS =  main.c \
 	gnl/get_next_line.c \
 	gnl/get_next_line_utils.c \
 	raycasting/raycasting.c\
+	raycasting/raycasting2.c\
+	raycasting/raycasting_utils.c\
 	raycasting/player.c \
+	raycasting/castrays.c \
+	raycasting/castrays2.c \
 	raycasting/player_utils.c \
 
 CC = @cc
