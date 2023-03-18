@@ -55,4 +55,8 @@ void	save_smallest_distance(t_cast_ray *casting, int i, t_data *d)
 	d->rays[i].wallhit_x = casting->hit_x;
 	d->rays[i].wallhit_y = casting->hit_y;
 	d->rays[i].hit_vertical = casting->is_hitvertical;
+	d->rays[i].facing_down = casting->down;
+    casting->up = !casting->down;
+	casting->right = casting->right;
+	casting->left = !casting->right;
 }

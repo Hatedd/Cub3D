@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 00:37:39 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/17 05:59:05 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/18 02:39:19 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <math.h>
 # include <unistd.h>
 # include "mlx.h"
+// # include "minilibx_opengl_20191021/mlx.h"
+
 # include "gnl/get_next_line.h"
 # include "libft/libft.h"
 # include <stddef.h>
@@ -61,6 +63,9 @@ typedef struct cub3d
 	int		map_len;
 	int		num_rows;
 	int		num_cols ;
+	int		p_direction;
+	int		pos_x;
+	int		pos_y;
 }	t_cub3d;
 
 typedef struct s_player
@@ -76,6 +81,7 @@ typedef struct s_player
 	int		turn;
 	int		walk;
 	int		flg;
+	int		starting_position;
 }	t_player;
 
 typedef struct s_rays
@@ -191,7 +197,7 @@ void	ft_chflood(t_cub3d *cub);
 void	render_map(t_data *data);
 void	img_assigne(t_data *data);
 void	ft_ray_init(t_data *data);
-void	my_get_data_addr(t_data *data);
+void	my_get_data_addr(t_data *data, int i);
 void	render_floor_roof(t_data *data);
 void	init_cub(char *file, t_cub3d *cub);
 void	creat_win(t_data *data, t_img *img);
@@ -199,9 +205,7 @@ void	cast_ray(t_data *d, double ray_angle, int i);
 void	ft_init_data(t_cub3d *cub, t_data *d, t_img *img);
 void	my_mlx_p_put(t_data *data, int x, int y, int color);
 void	ft_walls_check(t_cub3d *cub, int i, int j, int flag);
-void	get_array_dimensions(t_cub3d *cub, int *rows, int *cols);
 void	save_smallest_distance(t_cast_ray *casting, int i, t_data *d);
-void	drawLine(t_data *d, int x1, int y1, int x2, int y2, int color);
 void	ft_draw_square(t_data *data, int color, int x, int y, int size);
 
 #endif

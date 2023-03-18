@@ -10,25 +10,60 @@ void	my_mlx_p_put(t_data *data, int x, int y, int color)
 	*(unsigned int *) d = color;
 }
 
-void	my_get_data_addr(t_data *data)
+void	my_get_data_addr(t_data *data, int i)
 {
-	if (data->rays->facing_down || data->rays->facing_up)
+	// if (data->rays[i].facing_down || data->rays[i].facing_up)
+	// {
+	// 	if (data->rays[i].facing_down)
+	// 	{
+	// 		data->address = mlx_get_data_addr(data->t_so, \
+	// 			&data->bits_per_pixel, &data->line_len, &data->endian);
+	// 	}
+	// 	else
+	// 	{
+	// 		data->address = mlx_get_data_addr(data->t_no, \
+	// 		&data->bits_per_pixel, &data->line_len, &data->endian);
+	// 	}
+	// }
+	// if (data->rays[i].facing_right || data->rays[i].facing_left)
+	// {
+	// 	if (data->rays[i].facing_right)
+	// 	{
+	// 		data->address = mlx_get_data_addr(data->t_ea , \
+	// 		&data->bits_per_pixel, &data->line_len, &data->endian);
+	// 	}
+	// 	else
+	// 	{
+	// 		data->address = mlx_get_data_addr(data->t_we, \
+	// 		&data->bits_per_pixel, &data->line_len, &data->endian);
+	// 	}
+	// }
+
+	if (!data->rays[i].hit_vertical)
 	{
-		if (data->rays->facing_down)
+		if (data->rays[i].facing_up)
+		{
 			data->address = mlx_get_data_addr(data->t_so, \
 				&data->bits_per_pixel, &data->line_len, &data->endian);
+		}
 		else
+		{
 			data->address = mlx_get_data_addr(data->t_no, \
-			&data->bits_per_pixel, &data->line_len, &data->endian);
+				&data->bits_per_pixel, &data->line_len, &data->endian);
+		}
 	}
-	if (data->rays->facing_right || data->rays->facing_left)
+	else
 	{
-		if (data->rays->facing_right)
+		if (data->rays[i].facing_right)
+		{
+			data->address = mlx_get_data_addr(data->t_we , \
+			&data->bits_per_pixel, &data->line_len, &data->endian);
+		}
+		else
+		{
 			data->address = mlx_get_data_addr(data->t_ea, \
 			&data->bits_per_pixel, &data->line_len, &data->endian);
-		else
-			data->address = mlx_get_data_addr(data->t_we, \
-			&data->bits_per_pixel, &data->line_len, &data->endian);
+		}
 	}
 }
 
@@ -44,6 +79,7 @@ int	raycasting(t_data *d)
 	}
 	if (d->flag == 1)
 		mlx_clear_window(d->mlx, d->win);
+	// render_player(d);
 	move_player(d);
 	render_floor_roof(d);
 	ft_castrays(d);

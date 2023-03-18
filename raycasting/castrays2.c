@@ -69,9 +69,9 @@ void	find_h_wall(t_cast_ray *casting, t_data *d)
 			casting->next_y_intersect, d);
 		if (wallcontent != 0)
 		{
-		casting->found_h_wall = 1;
-		casting->horzhit_x = casting->next_x_intersect;
-		casting->horzhit_y = casting->next_y_intersect;
+			casting->found_h_wall = 1;
+			casting->horzhit_x = casting->next_x_intersect;
+			casting->horzhit_y = casting->next_y_intersect;
 			break ;
 		}
 		else
@@ -116,14 +116,19 @@ void	cast_ray(t_data *d, double ray_angle, int i)
 	casting.up = !casting.down;
 	casting.right = ray_angle < 0.5 * PI || ray_angle > 1.5 * PI;
 	casting.left = !casting.right;
+	// d->rays[i].facing_up = ray_angle >= PI / 4 && ray_angle <= 7 * PI / 4;
+	// d->rays[i].facing_down = ray_angle >= 5 * PI / 4 && ray_angle <= 3 * PI / 4;
+	// d->rays[i].facing_right = ray_angle >= 7 * PI / 4 && ray_angle <= 5 * PI / 4;
+	// d->rays[i].facing_left = ray_angle >= 3 * PI / 4 && ray_angle <= PI / 4;
 	casting.hit_x = 0;
 	casting.hit_y = 0;
 	casting.hit_dist = 0;
 	casting.is_hitvertical = 0;
-	d->rays->facing_down = casting.down;
-	d->rays->facing_up = casting.up;
-	d->rays->facing_right = casting.right;
-	d->rays->facing_left = casting.left;
+	d->rays[i].facing_down = casting.down; 
+	d->rays[i].facing_up = !casting.down; 
+	d->rays[i].facing_right = casting.right;
+	d->rays[i].facing_left = !casting.right;
+
 	find_h_dist(d, ray_angle, i, &casting);
 	find_v_dist(d, ray_angle, i, &casting);
 	save_smallest_distance(&casting, i, d);

@@ -1,10 +1,10 @@
 #include "../cub3d.h"
 
-unsigned int	my_mlx_texture(t_data *data, int x, int y)
+unsigned int	my_mlx_texture(t_data *data, int x, int y, int i)
 {
 	char	*dst;
 
-	my_get_data_addr(data);
+	my_get_data_addr(data, i);
 	dst = data->address + (y * data->line_len + x * \
 	(data->bits_per_pixel / 8));
 	return (*(unsigned int *)dst);
@@ -46,7 +46,8 @@ void	ft_render3d(t_data *data, int ray_index)
 		(wall_strip_height / 2) - (WIN_HIGHT / 2);
 		t_off_sety = distance_top * ((float)TILE / wall_strip_height);
 		my_mlx_p_put(data, ray_index, pixel_index_y, \
-		my_mlx_texture(data, t_off_setx, t_off_sety));
+		my_mlx_texture(data, t_off_setx, t_off_sety, ray_index));
+		// my_mlx_p_put(data, ray_index, pixel_index_y, 0x0000F0);
 		pixel_index_y++;
 	}
 }

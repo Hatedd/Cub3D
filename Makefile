@@ -17,13 +17,14 @@ SRCS =  main.c \
 	raycasting/castrays2.c \
 	raycasting/player_utils.c \
 
+
 CC = @cc
 
 RM = rm -f
 
-CFLAGS = #-Wall -Wextra -Werror -g -fsanitize=address 
+CFLAGS = -g -fsanitize=address 
 
-MLX =  -Imlx -lmlx -framework OpenGl -framework Appkit
+MLX = -Imlx -lmlx -framework OpenGl -framework Appkit
 
 all : 	${NAME}
 

@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 00:07:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/17 00:32:56 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/18 03:17:42 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,4 +124,6 @@ void	creat_win(t_data *data, t_img *img)
 		&data->img_w, &data->img_h);
 	data->t_we = mlx_xpm_file_to_image(data->mlx, data->cub->we_t, \
 		&data->img_w, &data->img_h);
+	if (!data->t_so || !data->t_no || !data->t_ea || !data->t_we)
+		exit(write(2, "Error xpm\n", 11));
 }
