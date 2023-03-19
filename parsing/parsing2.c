@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouizar <mouizar@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 23:35:22 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/19 17:31:58 by mouizar          ###   ########.fr       */
+/*   Updated: 2023/03/19 19:00:10 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	parsing(t_cub3d *cub)
 	while (cub->infile[i])
 	{
 		if (!(parsing_textur(cub, cub->infile[i])))
-			exit(write(2, "Invalide data\n", 15));
+			exit(write(2, "Invalide data texture\n", 23));
 		if ((cub->ceilling_rgb) && (cub->ea_t) && (cub->floor_rgb)
 			&& (cub->no_t) && (cub->so_t) && (cub->we_t))
 		{	

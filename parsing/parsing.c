@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:50:30 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/16 23:34:44 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/19 19:02:13 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	check_str2(char *str, int i, int len)
 	while (i < len)
 	{
 		if (str[i] == '\n' && str[i + 1] == '\n')
-			exit(write(2, "Erorr empty line in map\n", 25));
+			exit(write(2, "Erorr empty line in map or dup txt\n", 36));
 		i++;
 	}
 	return (i);
@@ -74,7 +74,7 @@ void	check_str(char *str, t_cub3d *cub)
 		if (str[i] == 'N' || str[i] == 'S' || str[i] == 'W' || str[i] == 'E'\
 			|| str[i] == 'F' || str[i] == 'C')
 			check++;
-		if (check > 7 && str[i] == '1')
+		if (check > 6 && str[i] == '1')
 		{
 			i = check_str2(str, i, len);
 			if (str[i] == '\0')
