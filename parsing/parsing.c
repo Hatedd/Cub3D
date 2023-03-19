@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:50:30 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/19 19:02:13 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/19 19:07:35 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,16 @@ void	check_empty(char *str, t_cub3d *cub)
 
 int	check_str2(char *str, int i, int len)
 {
+	int	p_num;
+
+	p_num = 0;
 	while (i < len)
 	{
+		if (str[i] == 'N' || str[i] == 'S' || str[i] == 'W' || str[i] == 'E'\
+			|| str[i] == 'F' || str[i] == 'C')
+			p_num++;
+		if (p_num > 1)
+			exit(write(2, "Erorr dub player\n", 18));
 		if (str[i] == '\n' && str[i + 1] == '\n')
 			exit(write(2, "Erorr empty line in map or dup txt\n", 36));
 		i++;
