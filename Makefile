@@ -6,6 +6,7 @@ SRCS =  main.c \
 	parsing/parsing3.c \
 	parsing/parsing4.c \
 	parsing/parsing5.c \
+	parsing/p_parsing.c \
 	parsing/init_parsing.c \
 	gnl/get_next_line.c \
 	gnl/get_next_line_utils.c \
@@ -16,13 +17,15 @@ SRCS =  main.c \
 	raycasting/castrays.c \
 	raycasting/castrays2.c \
 	raycasting/player_utils.c \
+	#minilibx_opengl_20191021/libmlx.a\
 
 
-CC = @cc
+
+CC = cc
 
 RM = rm -f
 
-CFLAGS = -g -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address 
 
 MLX = -Imlx -lmlx -framework OpenGl -framework Appkit
 

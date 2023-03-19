@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 00:37:39 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/18 02:39:19 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/19 18:05:39 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 # include <math.h>
 # include <unistd.h>
 # include "mlx.h"
-// # include "minilibx_opengl_20191021/mlx.h"
-
 # include "gnl/get_next_line.h"
 # include "libft/libft.h"
 # include <stddef.h>
@@ -27,12 +25,7 @@
 # define WIN_WIDHT 1280
 # define WIN_HIGHT 640
 # define TILE 64
-# define T TILE
-# define FOV (60 * (PI / 180))
-# define EDGINGWIDTH 30
 # define NUM_RAYS WIN_WIDHT
-# define SCALE_FACTOR 4 // or any other value you want
-# define TWO_PI 6.28318530
 # define INT_MAX 2147483647
 
 typedef struct s_img
@@ -44,6 +37,19 @@ typedef struct s_img
 	char	*addr;
 }	t_img;
 
+typedef struct s_treed
+{
+	int		wall_strip_height;
+	int		wall_bottom_pixel;
+	int		wall_top_pixel;
+	int		pixel_index_y;
+	int		distance_top;
+	int		t_off_setx;
+	int		t_off_sety;
+	double	distance_projection_plane;
+	double	projected_wall_height;
+	double	perpendicular_hit_distance;
+}	t_treed;
 typedef struct cub3d
 {
 	char	*no_t;
@@ -170,42 +176,44 @@ typedef struct data
 	t_img		*img;
 }	t_data;
 
-int		check_ws(char c);
-int		ft_close_win(void);
-int		raycasting(t_data *d);
-int		ft_map_width(char **s);
-int		ft_map_hight(char **s);
-int		ft_strlenn(const char *s);
-int		mat_len(t_cub3d *cub, int pos);
-int		ft_key_press(int key, t_data *d);
-int		ft_texture(t_cub3d *cub, char *str);
-int		ft_key_relase(int key_press, t_data *d);
-int		ft_floor_ceilling(t_cub3d *cub, char *str);
-int		mapHasWallAt(double x, double y, t_data *d);
-int		get_wall_cordinates(double x, double y, t_data *d);
-
-void	ft_freee(char **ptr);
-void	ft_updown(char *str);
-void	ft_midline(char *str);
-void	parsing(t_cub3d *cub);
-void	img_init(t_data *data);
-void	player_init(t_data *d);
-void	move_player(t_data *d);
-void	ft_castrays(t_data *d);
-void	render_player(t_data *d);
-void	ft_chflood(t_cub3d *cub);
-void	render_map(t_data *data);
-void	img_assigne(t_data *data);
-void	ft_ray_init(t_data *data);
-void	my_get_data_addr(t_data *data, int i);
-void	render_floor_roof(t_data *data);
-void	init_cub(char *file, t_cub3d *cub);
-void	creat_win(t_data *data, t_img *img);
-void	cast_ray(t_data *d, double ray_angle, int i);
-void	ft_init_data(t_cub3d *cub, t_data *d, t_img *img);
-void	my_mlx_p_put(t_data *data, int x, int y, int color);
-void	ft_walls_check(t_cub3d *cub, int i, int j, int flag);
-void	save_smallest_distance(t_cast_ray *casting, int i, t_data *d);
-void	ft_draw_square(t_data *data, int color, int x, int y, int size);
+int				check_ws(char c);
+int				ft_close_win(void);
+int				raycasting(t_data *d);
+int				ft_map_width(char **s);
+int				ft_map_hight(char **s);
+int				player_pos(t_cub3d *cub);
+int				ft_strlenn(const char *s);
+int				mat_len(t_cub3d *cub, int pos);
+int				ft_key_press(int key, t_data *d);
+int				ft_texture(t_cub3d *cub, char *str);
+int				ft_key_relase(int key_press, t_data *d);
+int				ft_floor_ceilling(t_cub3d *cub, char *str);
+int				get_wall_cordinates(double x, double y, t_data *d);
+void			ft_freee(char **ptr);
+void			ft_updown(char *str);
+void			ft_midline(char *str);
+void			parsing(t_cub3d *cub);
+void			img_init(t_data *data);
+void			player_init(t_data *d);
+void			move_player(t_data *d);
+void			ft_castrays(t_data *d);
+void			ft_chflood(t_cub3d *cub);
+void			ft_ray_init(t_data *data);
+void			my_get_data_addr(t_data *data, int i);
+void			render_floor_roof(t_data *data);
+void			init_cub(char *file, t_cub3d *cub);
+void			creat_win(t_data *data, t_img *img);
+void			cast_ray(t_data *d, double ray_angle, int i);
+void			ft_init_data(t_cub3d *cub, t_data *d, t_img *img);
+void			my_mlx_p_put(t_data *data, int x, int y, int color);
+void			ft_walls_check(t_cub3d *cub, int i, int j, int flag);
+void			save_smallest_distance(t_cast_ray *casting, int i, t_data *d);
+int				get_wall_cordinates(double x, double y, t_data *d);
+void			findvdist(t_data *d, double ray_angle, t_cast_ray *cst);
+void			findhdist(t_data *d, double ray_angle, int i, t_cast_ray *cst);
+void			wallcontentv(t_cast_ray *casting, double *wall, t_data *d);
+void			wallcontenth(t_cast_ray *casting, double *wall, t_data *d);
+double			resize_radians(double angle);
+unsigned int	my_mlx_texture(t_data *data, int x, int y, int i);
 
 #endif

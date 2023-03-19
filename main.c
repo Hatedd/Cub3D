@@ -12,17 +12,17 @@
 
 #include "cub3d.h"
 
-void	ft_freee(char **ptr)
+void	ft_freee(char	**sr)
 {
 	int	i;
 
 	i = 0;
-	while (ptr[i])
+	while (sr[i])
 	{
-		free(ptr[i]);
+		free(sr[i]);
 		i++;
 	}
-	free(ptr);
+	free(sr);
 }
 
 int	check_ws(char c)

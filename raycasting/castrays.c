@@ -1,79 +1,103 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   castrays.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mouizar <mouizar@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/19 02:41:46 by mouizar           #+#    #+#             */
+/*   Updated: 2023/03/19 03:27:55 by mouizar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
-unsigned int	my_mlx_texture(t_data *data, int x, int y, int i)
+void	ft_assigne3d(t_treed *t)
 {
-	char	*dst;
+	t->wall_strip_height = 0;
+	t->wall_bottom_pixel = 0;
+	t->wall_top_pixel = 0;
+	t->pixel_index_y = 0;
+	t->distance_top = 0;
+	t->t_off_setx = 0;
+	t->t_off_sety = 0;
+	t->distance_projection_plane = 0;
+	t->projected_wall_height = 0;
+	t->perpendicular_hit_distance = 0;
+}
 
-	my_get_data_addr(data, i);
-	dst = data->address + (y * data->line_len + x * \
-	(data->bits_per_pixel / 8));
-	return (*(unsigned int *)dst);
+void	ft_calculate_wall_render_values(t_data *data, int ray_index, t_treed *t)
+{
+	t->perpendicular_hit_distance = data->rays[ray_index].hit_dist * \
+		cos(data->rays[ray_index].angle - data->player->rotationangle);
+	t->distance_projection_plane = (WIN_WIDHT / 2) / tan(data->rays->fov / 2);
+	t->projected_wall_height = (TILE / t->perpendicular_hit_distance) * \
+		t->distance_projection_plane;
+	t->wall_strip_height = (int)t->projected_wall_height;
+	t->wall_top_pixel = (WIN_HIGHT / 2) - (t->wall_strip_height / 2);
+	if (t->wall_top_pixel < 0)
+		t->wall_top_pixel = 0;
+	t->wall_bottom_pixel = (WIN_HIGHT / 2) + (t->wall_strip_height / 2);
+	if (t->wall_bottom_pixel > WIN_HIGHT)
+		t->wall_bottom_pixel = WIN_HIGHT;
 }
 
 void	ft_render3d(t_data *data, int ray_index)
 {
-	int		wall_strip_height;
-	int		wall_bottom_pixel;
-	int		wall_top_pixel;
-	int		pixel_index_y;
-	int		distance_top;
-	int		t_off_setx;
-	int		t_off_sety;
-	double	distance_projection_plane;
-	double	projected_wall_height;
-	double	perpendicular_hit_distance;
+	t_treed	t;
 
-	perpendicular_hit_distance = data->rays[ray_index].hit_dist * \
-	cos(data->rays[ray_index].angle - data->player->rotationangle);
-	distance_projection_plane = (WIN_WIDHT / 2) / tan(data->rays->fov / 2);
-	projected_wall_height = (TILE / perpendicular_hit_distance) * \
-	distance_projection_plane;
-	wall_strip_height = (int)projected_wall_height;
-	wall_top_pixel = (WIN_HIGHT / 2) - (wall_strip_height / 2);
-	if (wall_top_pixel < 0)
-		wall_top_pixel = 0;
-	wall_bottom_pixel = (WIN_HIGHT / 2) + (wall_strip_height / 2);
-	if (wall_bottom_pixel > WIN_HIGHT)
-		wall_bottom_pixel = WIN_HIGHT;
-	pixel_index_y = wall_top_pixel;
+	ft_assigne3d(&t);
+	ft_calculate_wall_render_values(data, ray_index, &t);
+	t.pixel_index_y = t.wall_top_pixel;
 	if (data->rays[ray_index].hit_vertical)
-		t_off_setx = (int)(data->rays[ray_index].wallhit_y) % TILE;
+		t.t_off_setx = (int)(data->rays[ray_index].wallhit_y) % TILE;
 	else
-		t_off_setx = (int)(data->rays[ray_index].wallhit_x) % TILE;
-	while (pixel_index_y < wall_bottom_pixel)
+		t.t_off_setx = (int)(data->rays[ray_index].wallhit_x) % TILE;
+	while (t.pixel_index_y < t.wall_bottom_pixel)
 	{
-		distance_top = pixel_index_y + \
-		(wall_strip_height / 2) - (WIN_HIGHT / 2);
-		t_off_sety = distance_top * ((float)TILE / wall_strip_height);
-		my_mlx_p_put(data, ray_index, pixel_index_y, \
-		my_mlx_texture(data, t_off_setx, t_off_sety, ray_index));
-		// my_mlx_p_put(data, ray_index, pixel_index_y, 0x0000F0);
-		pixel_index_y++;
+		t.distance_top = t.pixel_index_y + \
+		(t.wall_strip_height / 2) - (WIN_HIGHT / 2);
+		t.t_off_sety = t.distance_top * ((float)TILE / t.wall_strip_height);
+		my_mlx_p_put(data, ray_index, t.pixel_index_y, \
+		my_mlx_texture(data, t.t_off_setx, t.t_off_sety, ray_index));
+		t.pixel_index_y++;
 	}
 }
 
-double	resize_radians(double angle)
+void	cast_ray(t_data *d, double ray_angle, int i)
 {
-	angle = fmod(angle, (2.0 * PI));
-	if (angle < 0)
-		angle = (2 * PI) + angle;
-	return (angle);
+	t_cast_ray	casting;
+
+	casting.down = (ray_angle > 0 && ray_angle < PI);
+	casting.up = (!casting.down);
+	casting.right = (ray_angle < 0.5 * PI || ray_angle > 1.5 * PI);
+	casting.left = !casting.right;
+	casting.hit_x = 0;
+	casting.hit_y = 0;
+	casting.hit_dist = 0;
+	casting.is_hitvertical = 0;
+	d->rays[i].facing_down = casting.down;
+	d->rays[i].facing_up = !casting.down;
+	d->rays[i].facing_right = casting.right;
+	d->rays[i].facing_left = !casting.right;
+	findhdist(d, ray_angle, i, &casting);
+	findvdist(d, ray_angle, &casting);
+	save_smallest_distance(&casting, i, d);
 }
 
 void	ft_castrays(t_data *d)
 {
-	t_cast_ray	casting;
 	double		ray_angle;
 	int			i;
 
 	i = -1;
-	ray_angle = d->player->rotationangle - (FOV / 2);
+	ray_angle = d->player->rotationangle - (d->rays->fov / 2);
 	while (++i < NUM_RAYS)
 	{
 		ray_angle = resize_radians(ray_angle);
 		d->rays[i].angle = ray_angle;
 		cast_ray(d, ray_angle, i);
-		ray_angle += FOV / NUM_RAYS;
+		ray_angle += d->rays->fov / NUM_RAYS;
 		ft_render3d(d, i);
 	}
 }

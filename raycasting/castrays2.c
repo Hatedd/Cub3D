@@ -1,19 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   castrays2.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mouizar <mouizar@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/19 01:50:12 by mouizar           #+#    #+#             */
+/*   Updated: 2023/03/19 03:29:17 by mouizar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 void	find_v_wall(t_cast_ray *casting, t_data *d)
 {
 	double	wallcontent;
 
-	while (casting->next_vert_touch_x >= 0 && \
-		casting->next_vert_touch_x <= WIN_WIDHT & casting->next_vert_touch_y >= 0 \
-		&& casting->next_vert_touch_y <= WIN_HIGHT)
+	wallcontent = 0;
+	while (casting->next_vert_touch_y >= 0 && \
+			casting->next_vert_touch_y <= d->cub->map_hight * TILE && \
+				casting->next_vert_touch_x >= 0 && \
+					casting->next_vert_touch_x <= d->cub->map_whitd * TILE)
 	{
-		if (casting->left)
-			wallcontent = get_wall_cordinates(casting->next_vert_touch_x + \
-			(-1), casting->next_vert_touch_y, d);
-		else
-			wallcontent = get_wall_cordinates(casting->next_vert_touch_x, \
-			casting->next_vert_touch_y, d);
+		wallcontentv(casting, &wallcontent, d);
 		if (wallcontent != 0)
 		{
 			casting->found_v_wall = 1;
@@ -29,44 +38,40 @@ void	find_v_wall(t_cast_ray *casting, t_data *d)
 	}
 }
 
-void	find_v_dist(t_data *d, double ray_angle, int i, t_cast_ray *casting)
+void	findvdist(t_data *d, double ray_angle, t_cast_ray *cst)
 {
-	casting->found_v_wall = 0;
-	casting->verthit_x = 0;
-	casting->verthit_y = 0;
-	casting->x_intersect = floor(d->player->x / TILE) * TILE;
-	if (casting->right)
-		casting->x_intersect += TILE;
-	casting->y_intersect = d->player->y + \
-	(casting->x_intersect - d->player->x) * tan(ray_angle);
-	casting->deltax = TILE;
-	if (casting->left)
-		casting->deltax *= -1;
-	casting->deltay = TILE * tan(ray_angle);
-	if (casting->up && casting->deltay > 0)
-		casting->deltay *= -1;
-	else if (casting->down && casting->deltay < 0)
-		casting->deltay *= -1;
-	casting->next_vert_touch_x = casting->x_intersect;
-	casting->next_vert_touch_y = casting->y_intersect;
-	find_v_wall(casting, d);
+	cst->found_v_wall = 0;
+	cst->verthit_x = 0;
+	cst->verthit_y = 0;
+	cst->x_intersect = floor(d->player->x / TILE) * TILE;
+	if (cst->right)
+		cst->x_intersect += TILE;
+	cst->y_intersect = d->player->y + \
+	(cst->x_intersect - d->player->x) * tan(ray_angle);
+	cst->deltax = TILE;
+	if (cst->left)
+		cst->deltax *= -1;
+	cst->deltay = TILE * tan(ray_angle);
+	if (cst->up && cst->deltay > 0)
+		cst->deltay *= -1;
+	else if (cst->down && cst->deltay < 0)
+		cst->deltay *= -1;
+	cst->next_vert_touch_x = cst->x_intersect;
+	cst->next_vert_touch_y = cst->y_intersect;
+	find_v_wall(cst, d);
 }
 
 void	find_h_wall(t_cast_ray *casting, t_data *d)
 {
 	double	wallcontent;
 
-	while (casting->next_x_intersect >= 0 && \
-		casting->next_x_intersect <= WIN_WIDHT && \
-		casting->next_y_intersect >= 0 && casting->next_y_intersect <= \
-		WIN_HIGHT)
+	wallcontent = 0;
+	while (casting->next_y_intersect >= 0 && \
+			casting->next_y_intersect <= d->cub->map_hight * TILE && \
+				casting->next_x_intersect >= 0 && \
+					casting->next_x_intersect <= d->cub->map_whitd * TILE)
 	{
-		if (casting->up)
-			wallcontent = get_wall_cordinates(casting->next_x_intersect, \
-			casting->next_y_intersect + (-1), d);
-		else
-			wallcontent = get_wall_cordinates(casting->next_x_intersect, \
-			casting->next_y_intersect, d);
+		wallcontenth(casting, &wallcontent, d);
 		if (wallcontent != 0)
 		{
 			casting->found_h_wall = 1;
@@ -82,54 +87,28 @@ void	find_h_wall(t_cast_ray *casting, t_data *d)
 	}
 }
 
-void	find_h_dist(t_data *d, double ray_angle, int i, t_cast_ray *casting)
+void	findhdist(t_data *d, double ray_angle, int i, t_cast_ray *cst)
 {
-	casting->found_h_wall = 0;
-	casting->horzhit_x = 0;
-	casting->horzhit_y = 0;
+	cst->found_h_wall = 0;
+	cst->horzhit_x = 0;
+	cst->horzhit_y = 0;
 	d->rays[i].angle = ray_angle;
-	casting->y_intersect = floor(d->player->y / TILE) * TILE;
-	if (casting->down)
-		casting->y_intersect +=  TILE;
-	casting->x_intersect = d->player->x + \
-	(casting->y_intersect - d->player->y) / tan(ray_angle);
-	casting->deltay = TILE;
-	if (casting->up)
-		casting->deltay *= -1;
+	cst->y_intersect = floor(d->player->y / TILE) * TILE;
+	if (cst->down)
+		cst->y_intersect += TILE;
+	cst->x_intersect = d->player->x + \
+	(cst->y_intersect - d->player->y) / tan(ray_angle);
+	cst->deltay = TILE;
+	if (cst->up)
+		cst->deltay *= -1;
 	else
-		casting->deltay *= 1;
-	casting->deltax = TILE / tan(ray_angle);
-	if (casting->left && casting->deltax > 0)
-		casting->deltax *= -1;
-	else if (casting->right && casting->deltax < 0)
-		casting->deltax *= -1;
-	casting->next_x_intersect = casting->x_intersect;
-	casting->next_y_intersect = casting->y_intersect;
-	find_h_wall(casting, d);
-}
-
-void	cast_ray(t_data *d, double ray_angle, int i)
-{
-	t_cast_ray	casting;
-
-	casting.down = ray_angle > 0 && ray_angle < PI;
-	casting.up = !casting.down;
-	casting.right = ray_angle < 0.5 * PI || ray_angle > 1.5 * PI;
-	casting.left = !casting.right;
-	// d->rays[i].facing_up = ray_angle >= PI / 4 && ray_angle <= 7 * PI / 4;
-	// d->rays[i].facing_down = ray_angle >= 5 * PI / 4 && ray_angle <= 3 * PI / 4;
-	// d->rays[i].facing_right = ray_angle >= 7 * PI / 4 && ray_angle <= 5 * PI / 4;
-	// d->rays[i].facing_left = ray_angle >= 3 * PI / 4 && ray_angle <= PI / 4;
-	casting.hit_x = 0;
-	casting.hit_y = 0;
-	casting.hit_dist = 0;
-	casting.is_hitvertical = 0;
-	d->rays[i].facing_down = casting.down; 
-	d->rays[i].facing_up = !casting.down; 
-	d->rays[i].facing_right = casting.right;
-	d->rays[i].facing_left = !casting.right;
-
-	find_h_dist(d, ray_angle, i, &casting);
-	find_v_dist(d, ray_angle, i, &casting);
-	save_smallest_distance(&casting, i, d);
+		cst->deltay *= 1;
+	cst->deltax = TILE / tan(ray_angle);
+	if (cst->left && cst->deltax > 0)
+		cst->deltax *= -1;
+	else if (cst->right && cst->deltax < 0)
+		cst->deltax *= -1;
+	cst->next_x_intersect = cst->x_intersect;
+	cst->next_y_intersect = cst->y_intersect;
+	find_h_wall(cst, d);
 }

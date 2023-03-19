@@ -1,44 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycasting.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mouizar <mouizar@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/19 01:39:12 by mouizar           #+#    #+#             */
+/*   Updated: 2023/03/19 02:41:36 by mouizar          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 void	my_mlx_p_put(t_data *data, int x, int y, int color)
 {
-	char	*d;
+	char	*b;
 
 	if (x < 0 || x >= WIN_WIDHT || y < 0 || y >= WIN_HIGHT)
 		return ;
-	d = data->img->addr + (y * data->img->size + x * (data->img->bit_pp / 8));
-	*(unsigned int *) d = color;
+	b = data->img->addr + (y * data->img->size + x * (data->img->bit_pp / 8));
+	*(unsigned int *) b = color;
 }
 
 void	my_get_data_addr(t_data *data, int i)
 {
-	// if (data->rays[i].facing_down || data->rays[i].facing_up)
-	// {
-	// 	if (data->rays[i].facing_down)
-	// 	{
-	// 		data->address = mlx_get_data_addr(data->t_so, \
-	// 			&data->bits_per_pixel, &data->line_len, &data->endian);
-	// 	}
-	// 	else
-	// 	{
-	// 		data->address = mlx_get_data_addr(data->t_no, \
-	// 		&data->bits_per_pixel, &data->line_len, &data->endian);
-	// 	}
-	// }
-	// if (data->rays[i].facing_right || data->rays[i].facing_left)
-	// {
-	// 	if (data->rays[i].facing_right)
-	// 	{
-	// 		data->address = mlx_get_data_addr(data->t_ea , \
-	// 		&data->bits_per_pixel, &data->line_len, &data->endian);
-	// 	}
-	// 	else
-	// 	{
-	// 		data->address = mlx_get_data_addr(data->t_we, \
-	// 		&data->bits_per_pixel, &data->line_len, &data->endian);
-	// 	}
-	// }
-
 	if (!data->rays[i].hit_vertical)
 	{
 		if (data->rays[i].facing_up)
@@ -55,10 +40,8 @@ void	my_get_data_addr(t_data *data, int i)
 	else
 	{
 		if (data->rays[i].facing_right)
-		{
-			data->address = mlx_get_data_addr(data->t_we , \
+			data->address = mlx_get_data_addr(data->t_we, \
 			&data->bits_per_pixel, &data->line_len, &data->endian);
-		}
 		else
 		{
 			data->address = mlx_get_data_addr(data->t_ea, \
@@ -69,8 +52,6 @@ void	my_get_data_addr(t_data *data, int i)
 
 int	raycasting(t_data *d)
 {
-	int	i;
-
 	if (!d->img->img)
 	{
 		d->img->img = mlx_new_image(d->mlx, WIN_WIDHT, WIN_HIGHT);
@@ -79,7 +60,6 @@ int	raycasting(t_data *d)
 	}
 	if (d->flag == 1)
 		mlx_clear_window(d->mlx, d->win);
-	// render_player(d);
 	move_player(d);
 	render_floor_roof(d);
 	ft_castrays(d);
@@ -88,4 +68,14 @@ int	raycasting(t_data *d)
 	d->img->img = 0;
 	d->flag = 1;
 	return (0);
+}
+
+unsigned int	my_mlx_texture(t_data *data, int x, int y, int i)
+{
+	char	*dst;
+
+	my_get_data_addr(data, i);
+	dst = data->address + (y * data->line_len + x * \
+	(data->bits_per_pixel / 8));
+	return (*(unsigned int *)dst);
 }
