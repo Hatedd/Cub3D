@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   player.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouizar <mouizar@student.42.fr>            +#+  +:+       +#+        */
+/*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/19 01:35:51 by mouizar           #+#    #+#             */
-/*   Updated: 2023/03/19 01:38:45 by mouizar          ###   ########.fr       */
+/*   Updated: 2023/03/23 00:13:08 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_ray_init(t_data *data)
 
 int	ft_close_win(void)
 {
-	exit(0);
+	exit(write(2, "****QUIT***\n", 13));
 	return (0);
 }
 

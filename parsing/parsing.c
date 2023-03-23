@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mouizar <mouizar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/27 19:50:30 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/19 19:07:35 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/19 23:19:02 by mouizar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	lastlen(char *str)
 	if (i == 0)
 		exit(write(2, "Empty file\n", 12));
 	i--;
+	if (str[i] == '\n')
+		exit(write(2, "New line Error\n", 16));
 	if (str[i] == '\n' && str[i - 1] == '\n' && i > 0)
 		exit(write(2, "Erorr empty line in map\n", 25));
 	while (check_ws(str[i]) && i > 0)

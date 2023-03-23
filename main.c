@@ -77,8 +77,11 @@ int	main(int ac, char **av)
 		ft_ray_init(&d);
 		mlx_hook(d.win, 2, 1L << 0, ft_key_press, &d);
 		mlx_hook(d.win, 3, 1L << 1, ft_key_relase, &d);
+		mlx_hook(d.win, 17, 1L << 1, ft_close_win, &d);
 		mlx_loop_hook(d.mlx, raycasting, &d);
 		mlx_loop(d.mlx);
 	}
+	ft_freee(&cub->ceilling_rgb);
+	ft_freee(&cub->floor_rgb);
 	return (0);
 }

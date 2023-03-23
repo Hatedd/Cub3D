@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing5.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mouizar <mouizar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 00:09:37 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/17 00:11:38 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/19 23:10:49 by mouizar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,13 @@ int	ft_floor_ceilling(t_cub3d *cub, char *str)
 	int	i;
 	int	j;
 
-	if ((ft_strncmp(str, "F", 1) == 0 && cub->floor_rgb)
-		|| (ft_strncmp(str, "C", 1) == 0 && cub->ceilling_rgb))
+	if (ft_norm(cub, str))
 		return (0);
 	i = 1;
 	while (check_ws(str[i]))
 		i++;
+	if (str[1] != ' ')
+		return (0);
 	j = i;
 	while (ft_isprint(str[j]))
 		j++;

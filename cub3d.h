@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mouizar <mouizar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 00:37:39 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/19 18:05:39 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/20 00:35:16 by mouizar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # include "libft/libft.h"
 # include <stddef.h>
 # define PI 3.141592653589793
-# define WIN_WIDHT 1280
-# define WIN_HIGHT 640
+# define WIN_WIDHT 1500
+# define WIN_HIGHT 750
 # define TILE 64
 # define NUM_RAYS WIN_WIDHT
 # define INT_MAX 2147483647
@@ -184,6 +184,7 @@ int				ft_map_hight(char **s);
 int				player_pos(t_cub3d *cub);
 int				ft_strlenn(const char *s);
 int				mat_len(t_cub3d *cub, int pos);
+int				ft_norm(t_cub3d *cub, char *str);
 int				ft_key_press(int key, t_data *d);
 int				ft_texture(t_cub3d *cub, char *str);
 int				ft_key_relase(int key_press, t_data *d);

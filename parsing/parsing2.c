@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   parsing2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mouizar <mouizar@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 23:35:22 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/19 19:00:10 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/19 23:11:25 by mouizar          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub3d.h"
+
+int	ft_norm(t_cub3d *cub, char *str)
+{
+	if ((ft_strncmp(str, "F", 1) == 0 && cub->floor_rgb)
+		|| (ft_strncmp(str, "C", 1) == 0 && cub->ceilling_rgb))
+		return (1);
+	return (0);
+}
 
 void	ft_copy_map(t_cub3d *cub, int pos)
 {
@@ -35,11 +43,11 @@ int	parsing_textur(t_cub3d *cub, char *str)
 	i = 0;
 	while (check_ws(*str))
 		str++;
+	if (*str == '\0')
+		return (1);
 	if (!ft_strncmp(str, "NO", 2) || !ft_strncmp(str, "SO", 2) || \
 		!ft_strncmp(str, "WE", 2) || !ft_strncmp(str, "EA", 2))
-	{
 		i = ft_texture(cub, str);
-	}
 	else if (!ft_strncmp(str, "F", 1) || !ft_strncmp(str, "C", 1))
 		i = ft_floor_ceilling(cub, str);
 	return (i);

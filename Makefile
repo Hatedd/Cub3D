@@ -17,15 +17,12 @@ SRCS =  main.c \
 	raycasting/castrays.c \
 	raycasting/castrays2.c \
 	raycasting/player_utils.c \
-	#minilibx_opengl_20191021/libmlx.a\
-
-
 
 CC = cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror
 
 MLX = -Imlx -lmlx -framework OpenGl -framework Appkit
 

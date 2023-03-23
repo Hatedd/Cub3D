@@ -6,7 +6,7 @@
 /*   By: yobenali <yobenali@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 00:07:06 by yobenali          #+#    #+#             */
-/*   Updated: 2023/03/18 03:17:42 by yobenali         ###   ########.fr       */
+/*   Updated: 2023/03/20 03:00:32 by yobenali         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	ft_texture(t_cub3d *cub, char *str)
 	i = 2;
 	while (check_ws(str[i]))
 		i++;
+	if (str[2] != ' ')
+		return (0);
 	j = i;
 	while (ft_isprint(*str + j) && !check_ws(*str + j))
 		j++;
@@ -78,6 +80,7 @@ int	get_rgb_from_string(char *line)
 	{
 		rgb[i] = ft_atoi(components[i]);
 	}
+	ft_freee(components);
 	return ((rgb[0] << 16 | rgb[1] << 8) | rgb[2]);
 }
 
@@ -112,7 +115,7 @@ void	render_floor_roof(t_data *data)
 void	creat_win(t_data *data, t_img *img)
 {
 	data->mlx = mlx_init();
-	data->win = mlx_new_window(data->mlx, WIN_WIDHT, WIN_HIGHT, "Cub3Dii");
+	data->win = mlx_new_window(data->mlx, WIN_WIDHT, WIN_HIGHT, "Cub3D");
 	img->img = mlx_new_image(data->mlx, WIN_WIDHT, WIN_HIGHT);
 	img->addr = mlx_get_data_addr(data->img->img, &img->bit_pp, \
 		&img->size, &img->end);
