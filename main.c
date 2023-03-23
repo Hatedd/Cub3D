@@ -81,7 +81,5 @@ int	main(int ac, char **av)
 		mlx_loop_hook(d.mlx, raycasting, &d);
 		mlx_loop(d.mlx);
 	}
-	ft_freee(&cub->ceilling_rgb);
-	ft_freee(&cub->floor_rgb);
 	return (0);
 }
